@@ -15,15 +15,20 @@ export default function SideBar() {
 
                 {!isOpen ? (
                     <div className="flex flex-row justify-between">
-                        <button
-                            className="text-primary text-3xl p-4"
-                            onClick={toggleSidebar}
-                        >
-                            <Icon icon="iconamoon:menu-burger-horizontal-duotone" />
-                        </button>
+                        <div>
+                            <button
+                                className="text-primary text-3xl p-4"
+                                onClick={toggleSidebar}
+                            >
+                                <Icon icon="iconamoon:menu-burger-horizontal-duotone" />
+                            </button>
+                            <div></div>
+                        </div>
                         <img className='sm:h-[60px] sm:w-[100px] h-6 w-10 mr-10' src='https://res.cloudinary.com/dzhdarh4q/image/upload/v1699014385/Reifenhauser/ReifenhauserLogo_hhc7wi.svg' alt='Logo' />
                     </div>
                 ) : (
+
+                    // side bar
                     <div className="bg-base h-full z-50 p-3">
                         <div className="flex flex-row justify-between">
                             <img className='sm:h-[45px] sm:w-[90px] h-6 w-10' src='https://res.cloudinary.com/dzhdarh4q/image/upload/v1699014385/Reifenhauser/ReifenhauserLogo_hhc7wi.svg' alt='Logo' />
@@ -34,14 +39,14 @@ export default function SideBar() {
 
                         <div>
                             <ul className='flex flex-col gap-5 mt-5'>
-                                <Nav title={"home"}/>
-                                <Nav title={"About Us"}/>
-                                <Nav title={"Services"}/>
-                                <Nav title={"Principals"}/>
-                                <Nav title={"Events"}/>
-                                <Nav title={"Media"}/>
-                                <Nav title={"Careers"}/>
-                                <Nav title={"Contact us"}/>
+                                <Nav title={"Home"} destination={"home"}/>
+                                <Nav title={"About Us"} destination={"aboutUs"}/>
+                                <Nav title={"Services"} destination={"services"}/>
+                                <Nav title={"Principals"}destination={"principals"} />
+                                <Nav title={"Events"} destination={"events"}/>
+                                <Nav title={"Media"} destination={"media"}/>
+                                <Nav title={"Careers"} destination={"careers"}/>
+                                <Nav title={"Contact us"} destination={"contactUs"}/>
                             </ul>
                         </div>
 
