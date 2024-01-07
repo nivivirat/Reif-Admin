@@ -35,7 +35,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
 
     return (
         <div className="fixed top-0 left-0 z-40 w-full h-full bg-gray-200 bg-opacity-50 flex justify-center items-center overflow-auto">
-            <div className="bg-white p-10 rounded-md relative flex flex-col gap-4">
+            <div className="bg-white p-8 rounded-md relative flex flex-col gap-4">
                 <button className="absolute top-0 right-0 p-2" onClick={onClose}>
                     <Icon icon="mingcute:close-fill" />
                 </button>
@@ -75,23 +75,22 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                         />
                     </label>
                     <label className="text-primary flex flex-col">
-                        <span>Upload Image:</span>
+                        <span>Upload Image:  <span className='text-[12px] text-black'> (Preferably 250px X 350px)</span></span>
                         <input
                             type="file"
                             accept=".jpg, .png, image/jpeg, image/png"
                             onChange={(e) => handleFileChange(e, 'img')}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
-                            required 
                         />
                     </label>
+                    {/* <h2></h2> */}
                     <label className="text-primary flex flex-col">
-                        <span>Description:</span>
+                        <span>Description:</span><span className='text-[12px] text-black'>(Provide with both description & archive images for hover effect)</span>
                         <textarea
                             name="description"
                             value={event.description}
                             onChange={onChange}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
-                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -103,7 +102,6 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
                             name="archivedImg"
                             multiple  // Enable multiple file selection
-                            required 
                         />
                     </label>
                     <button className="bg-primary text-base text-white py-2 px-4 rounded-md" type="submit">
