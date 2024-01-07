@@ -11,8 +11,10 @@ export default function SideBar() {
     };
 
     useEffect(() => {
-        setLocation(window.location.pathname.slice(1)); // Remove the leading '/'
+        const path = window.location.pathname.slice(1); // Remove the leading '/'
+        setLocation(path === '' || path === '/' ? 'home' : path); // Set 'home' if path is empty or '/'
     }, []);
+
 
     return (
         <div className="fixed top-0 left-0 z-20">
@@ -44,9 +46,9 @@ export default function SideBar() {
 
                         <div>
                             <ul className='flex flex-col gap-5 mt-5'>
-                                <Nav title={"Home"} destination={"Home"} />
+                                <Nav title={"Home"} destination={""} />
                                 <Nav title={"About Us"} destination={"AboutUs"} />
-                                <Nav title={"Services"} destination={"Aervices"} />
+                                <Nav title={"Services"} destination={"Services"} />
                                 <Nav title={"Principals"} destination={"Principals"} />
                                 <Nav title={"Events"} destination={"Events"} />
                                 <Nav title={"Media"} destination={"Media"} />
