@@ -41,7 +41,6 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                 </button>
                 <h2 className="text-2xl font-semibold text-center">{title}</h2>
                 <form onSubmit={onSubmit} className="flex flex-col gap-3">
-                    {/* Other input fields... */}
                     <label className="text-primary flex flex-col">
                         <span>Event Name:</span>
                         <input
@@ -50,6 +49,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             value={event.eventName}
                             onChange={onChange}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
+                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -60,6 +60,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             value={event.date}
                             onChange={onChange}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
+                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -70,6 +71,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             value={event.location}
                             onChange={onChange}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
+                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -79,6 +81,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             accept=".jpg, .png, image/jpeg, image/png"
                             onChange={(e) => handleFileChange(e, 'img')}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
+                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -88,6 +91,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             value={event.description}
                             onChange={onChange}
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
+                            required 
                         />
                     </label>
                     <label className="text-primary flex flex-col">
@@ -99,6 +103,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
                             name="archivedImg"
                             multiple  // Enable multiple file selection
+                            required 
                         />
                     </label>
                     <button className="bg-primary text-base text-white py-2 px-4 rounded-md" type="submit">
