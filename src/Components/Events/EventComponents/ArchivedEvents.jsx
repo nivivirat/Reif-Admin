@@ -104,43 +104,6 @@ export default function ArchivedEvents() {
             });
     };
 
-
-
-    const [newYear, setNewYear] = useState("");
-
-    const addNewYear = () => {
-        if (newYear.trim() !== "") {
-            const newYearKey = `Events ${newYear}`;
-            const updatedEventsData = {
-                ...eventsData,
-                [newYearKey]: {}, // Initialize the new year's data as an empty object
-            };
-
-            setEventsData(updatedEventsData);
-
-            // Update the database with the new events data
-            const eventsRef = ref(db, 'events');
-            set(eventsRef, updatedEventsData)
-                .then(() => {
-                    console.log(`Year ${newYear} added successfully to the database`);
-                    setNewYear(""); // Reset the input field after adding the year
-
-                    // After adding a new year, invoke a function to add a new event
-                    // addNewEvent(newYearKey); // Pass the newly created year's key
-
-                    setCurrentYearForNewEvent(newYearKey);
-                    setNewEventForm(true);
-
-                    window.alert('Event added successfully!');
-
-                })
-                .catch((error) => {
-                    console.error('Error adding year to the database: ', error);
-                });
-        }
-    };
-
-
     // delete a event
 
     const deleteEvent = (year, eventUid) => {
@@ -220,7 +183,7 @@ export default function ArchivedEvents() {
     return (
         <div className="p-4 relative">
 
-            <h1 className="text-2xl font-bold mb-4 px-4">Archived Events</h1>
+            {/* <h1 className="text-2xl font-bold mb-4 px-4">Archived Events</h1> */}
             <div className="flex flex-wrap gap-4">
                 {Object.entries(eventsData).map(([year, events]) => (
                     <div key={year} className="border m-10 rounded-md p-10 w-screen px-24 gap-10">

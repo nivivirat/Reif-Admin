@@ -278,7 +278,7 @@ export default function AdminEvents() {
     return (
         <div className="p-4 relative">
 
-            <h1 className="text-2xl font-bold mb-4 px-4">Current Events</h1>
+            {/* <h1 className="text-2xl font-bold mb-4 px-4">Current Events</h1> */}
             <div className="flex flex-wrap gap-4">
 
                 {Object.entries(eventsData).map(([year, events]) => (

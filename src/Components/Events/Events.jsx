@@ -15,8 +15,11 @@ export default function Events() {
 
     return (
         <div>
-            <div className="p-4 relative flex justify-between items-center">
-                <h1 className="text-2xl font-bold mb-4 px-4">Admin Panel</h1>
+            <div className="p-4 relative flex justify-between items-center mt-14">
+                {/* <h1 className="text-2xl font-bold mb-4 px-4">Events Panel</h1> */}
+                <h1 className="text-2xl font-bold mb-4 px-4">
+                    {showCurrentEvents ? 'Current Events' : 'Archived Events'}
+                </h1>
                 <div className="space-x-4 flex flex-row">
                     <button
                         onClick={handleShowCurrentEvents}
