@@ -11,10 +11,6 @@ const Nav = ({ destination, title}) => {
         setdestinationLocation(`/${destination}`);
     }, [destination]);
 
-    console.log(location);
-    console.log(destinationLocation);
-
-
     return (
         <li>
             <a href={`/${destination}`}

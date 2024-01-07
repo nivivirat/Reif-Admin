@@ -34,7 +34,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
     };
 
     return (
-        <div className="fixed top-0 left-0 z-10 w-full h-full bg-gray-200 bg-opacity-50 flex justify-center items-center overflow-auto">
+        <div className="fixed top-0 left-0 z-40 w-full h-full bg-gray-200 bg-opacity-50 flex justify-center items-center overflow-auto">
             <div className="bg-white p-10 rounded-md relative flex flex-col gap-4">
                 <button className="absolute top-0 right-0 p-2" onClick={onClose}>
                     <Icon icon="mingcute:close-fill" />
