@@ -10,8 +10,8 @@ export default function SideBar() {
     };
 
     return (
-        <div className="fixed top-0 left-0 h-full z-10">
-            <div className={`${isOpen ? 'w-[300px] h-screen' : 'w-screen h-[100px]'} transition-all duration-500`}>
+        <div className="fixed top-0 left-0 z-10">
+            <div className={`${isOpen ? 'w-[300px] h-screen' : 'w-screen h-[80px]'} transition-all duration-500`}>
 
                 {!isOpen ? (
                     <div className="flex flex-row justify-between">
