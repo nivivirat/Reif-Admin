@@ -15,7 +15,7 @@ export default function Events() {
 
     return (
         <div>
-            <div className="p-4 relative flex justify-between items-center mt-14">
+            <div className="p-4 relative flex justify-between items-center">
                 {/* <h1 className="text-2xl font-bold mb-4 px-4">Events Panel</h1> */}
                 <h1 className="text-2xl font-bold mb-4 px-4">
                     {showCurrentEvents ? 'Current Events' : 'Archived Events'}

@@ -183,7 +183,6 @@ export default function ArchivedEvents() {
     return (
         <div className="p-4 relative">
 
-            {/* <h1 className="text-2xl font-bold mb-4 px-4">Archived Events</h1> */}
             <div className="flex flex-wrap gap-4">
                 {Object.entries(eventsData).map(([year, events]) => (
                     <div key={year} className="border m-10 rounded-md p-10 w-screen px-24 gap-10">

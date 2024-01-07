@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Events from './Components/Events/Events';
 import SideBar from './Components/Common/SideBar/SideBar';
+import Careers from './Components/Careers/Careers';
 
 function App() {
   return (
@@ -9,10 +10,10 @@ function App() {
         
         <SideBar />
 
-        <div className="ml-[50px]">
+        <div className="ml-[50px] mt-[80px]">
           <Routes>
             <Route path="/Events" element={<Events />} />
-            {/* <Route path="/" element={<Events />} /> */}
+            <Route path="/careers" element={<Careers />} />
           </Routes>
         </div>
 
