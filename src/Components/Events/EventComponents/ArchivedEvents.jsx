@@ -245,15 +245,25 @@ export default function ArchivedEvents() {
                                             <div className="w-[50%]">
                                                 <p className="font-semibold">Archived Images:</p>
                                                 <div className="flex flex-wrap gap-5">
-                                                    {Array.isArray(event.archivedImg) &&
-                                                        event.archivedImg.map((imgSrc, imgIndex) => (
+                                                    {
+                                                        Array.isArray(event.archivedImg) ? (
+                                                            event.archivedImg.map((imgSrc, imgIndex) => (
+                                                                <img
+                                                                    key={imgIndex}
+                                                                    src={imgSrc}
+                                                                    alt={`Archived Image ${imgIndex}`}
+                                                                    className="h-[150px] w-[200px] object-cover rounded-md mt-2"
+                                                                />
+                                                            ))
+                                                        ) : (
                                                             <img
-                                                                key={imgIndex}
-                                                                src={imgSrc}
-                                                                alt={`Archived Image ${imgIndex}`}
+                                                                src={event.archivedImg}
+                                                                alt="Archived Image"
                                                                 className="h-[150px] w-[200px] object-cover rounded-md mt-2"
                                                             />
-                                                        ))}
+                                                        )
+                                                    }
+
                                                 </div>
                                             </div>
                                         </div>
