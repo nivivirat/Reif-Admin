@@ -1,9 +1,29 @@
 import { useEffect, useState } from 'react';
 import { onValue, ref, getDatabase } from 'firebase/database';
 import { db } from '../../../firebase';
+import { Icon } from '@iconify/react';
+import CareerTypeSelection from './CareersComponents/CareerTypeSelection/CareerTypeSelection';
 
 export default function Careers() {
+
+    const [selectedStatus, setselectedStatus] = useState('applied');
+
+    const statusOptions = [
+        { value: 'applied', label: 'Applied' },
+        { value: 'waiting', label: 'Waiting' },
+        { value: 'rejected', label: 'Rejected' },
+        { value: 'selected', label: 'Selected' },
+    ];
+
+    const handleStatusChange = (e) => {
+        setselectedStatus(e.target.value);
+    };
+
     const [careersData, setCareersData] = useState([]);
+    const [applied, setApplied] = useState([]);
+    const [waiting, setWaiting] = useState([]);
+    const [rejected, setRejected] = useState([]);
+    const [selected, setSelected] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,7 +33,18 @@ export default function Careers() {
                 onValue(dbRef, (snapshot) => {
                     if (snapshot.exists()) {
                         const data = snapshot.val();
-                        const dataArray = Object.values(data);
+                        const dataArray = Object.values(data).map((career) => {
+                            // Convert timestamp to IST
+                            const timestampIST = new Date(career.timestamp).toLocaleString('en-US', {
+                                timeZone: 'Asia/Kolkata',
+                            });
+
+                            return {
+                                ...career,
+                                timestampIST, // Add timestamp in IST to the career object
+                            };
+                        });
+
                         setCareersData(dataArray);
                     }
                 });
@@ -30,34 +61,40 @@ export default function Careers() {
         };
     }, []);
 
+    useEffect(() => {
+        // Filter careersData array based on status and set separate state arrays
+        const appliedData = careersData.filter((career) => career.status === 'applied');
+        const waitingData = careersData.filter((career) => career.status === 'waiting');
+        const rejectedData = careersData.filter((career) => career.status === 'rejected');
+        const selectedData = careersData.filter((career) => career.status === 'selected');
+
+        setApplied(appliedData);
+        setWaiting(waitingData);
+        setRejected(rejectedData);
+        setSelected(selectedData);
+    }, [careersData]);
+
     return (
         <div className="py-8">
-            <h1 className="text-3xl font-bold mb-4">Careers</h1>
-            <div className="grid grid-cols-1 gap-4">
-                {careersData.map((career) => (
-                    <div key={career.timestamp} className="bg-white p-4 shadow rounded">
-                        <p className="text-black font-poppins mb-2">
-                            <span className="font-bold">Name:</span> {career.name}
-                        </p>
-                        <p className="text-black font-poppins mb-2">
-                            <span className="font-bold">Email:</span> {career.email}
-                        </p>
-                        <p className="text-black font-poppins mb-2">
-                            <span className="font-bold">Message:</span> {career.message}
-                        </p>
-                        <p className="text-black font-poppins mb-2">
-                            <span className="font-bold">Number:</span> {career.number}
-                        </p>
-                        <a
-                            href={career.fileDownloadURL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary font-poppins text-base block mb-2 hover:underline"
-                        >
-                            Resume Link
-                        </a>
-                    </div>
-                ))}
+            <div className="mb-4 flex justify-between">
+                <h1 className="text-3xl font-bold mb-4 first-letter:capitalize">{selectedStatus} Applications ({selectedStatus === 'applied' ? applied.length : selectedStatus === 'waiting' ? waiting.length : selectedStatus === 'rejected' ? rejected.length : selected.length})</h1>
+                <div className='mr-[100px]'>
+                    <select
+                        className="border-2 border-gray-300 p-2 font-bold rounded-md text-gray-700 focus:outline-none focus:border-blue-300"
+                        value={selectedStatus}
+                        onChange={handleStatusChange}
+                    >
+                        {/* <option value="">Select Status</option> */}
+                        {statusOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+            <div className=''>
+                <CareerTypeSelection option={selectedStatus} />
             </div>
         </div>
     );

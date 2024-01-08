@@ -138,15 +138,12 @@ export default function AdminEvents() {
             set(eventsRef, updatedEventsData)
                 .then(() => {
                     console.log(`Year ${newYear} added successfully to the database`);
-                    setNewYear(""); // Reset the input field after adding the year
-
-                    // After adding a new year, invoke a function to add a new event
-                    // addNewEvent(newYearKey); // Pass the newly created year's key
+                    setNewYear("");
 
                     setCurrentYearForNewEvent(newYearKey);
                     setNewEventForm(true);
 
-                    window.alert('Event added successfully!');
+                    // window.alert('Event added successfully!');
 
                 })
                 .catch((error) => {
