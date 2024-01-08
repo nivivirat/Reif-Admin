@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Nav from "./SideBarComponents/Nav";
 
 export default function SideBar() {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const [location, setLocation] = useState(null);
 
     const toggleSidebar = () => {
@@ -36,7 +36,7 @@ export default function SideBar() {
                 ) : (
 
                     // side bar
-                    <div className="z-40" onClick={()=>{setIsOpen(false)}}>
+                    <div className="z-40 h-screen" onClick={()=>{setIsOpen(false)}}>
                         <div className="bg-base h-full z-50 p-3 w-[300px]">
                             <div className="flex flex-row justify-between">
                                 <img className='sm:h-[45px] sm:w-[90px] h-6 w-10' src='https://res.cloudinary.com/dzhdarh4q/image/upload/v1699014385/Reifenhauser/ReifenhauserLogo_hhc7wi.svg' alt='Logo' />
