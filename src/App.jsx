@@ -25,7 +25,7 @@ function App() {
             <Route path="/mediacard" element={<AdminPanel1 />} />
             <Route path="/Newsletter" element={<Newsletter />} />
             <Route path="/" element={<Home />} />
-            <Route path="/testinomials" element={<TestAdmin />} />
+            <Route path="/testimonials" element={<TestAdmin />} />
           </Routes>
         </div>
 
