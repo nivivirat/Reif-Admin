@@ -131,52 +131,100 @@ const AdminPanel = () => {
       </button>
 
       {showAddForm && (
-        <form onSubmit={handleFormSubmit} style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <label>
-            Image:
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </label>
-          <label>
-            Title:
-            <input type="text" name="title" value={formData.title} onChange={handleInputChange} />
-          </label>
+  <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
+    <div className="mb-4">
+      <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
+        Image:
+      </label>
+      <input
+        type="file"
+        id="image"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
 
-          <button type="submit" style={{ fontSize: '20px', padding: '10px', backgroundColor: '#013A98', color: 'white', borderRadius: '5px', marginTop: '10px' }}>
-            Save New Media Card
-          </button>
-          <button
-            type="button"
-            onClick={handleCancelEdit}
-            style={{ fontSize: '20px', padding: '10px', backgroundColor: 'red', color: 'white', borderRadius: '5px', marginTop: '10px', marginLeft: '10px' }}
-          >
-            Cancel
-          </button>
-        </form>
-      )}
+    <div className="mb-4">
+      <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
+        Title:
+      </label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value={formData.title}
+        onChange={handleInputChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
 
-      {showEditForm && (
-        <form onSubmit={handleFormSubmit} style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <label>
-            Image:
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-          </label>
-          <label>
-            Title:
-            <input type="text" name="title" value={formData.title} onChange={handleInputChange} />
-          </label>
+    <div className="flex justify-center">
+      <button
+        type="submit"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+      >
+        Save New Media Card
+      </button>
+      <button
+        type="button"
+        onClick={handleCancelEdit}
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+)}
 
-          <button type="submit" style={{ fontSize: '20px', padding: '10px', backgroundColor: '#013A98', color: 'white', borderRadius: '5px', marginTop: '10px' }}>
-            Save Changes
-          </button>
-          <button
-            type="button"
-            onClick={handleCancelEdit}
-            style={{ fontSize: '20px', padding: '10px', backgroundColor: 'red', color: 'white', borderRadius: '5px', marginTop: '10px', marginLeft: '10px' }}
-          >
-            Cancel Edit
-          </button>
-        </form>
-      )}
+
+{showEditForm && (
+  <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
+    <div className="mb-4">
+      <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
+        Image:
+      </label>
+      <input
+        type="file"
+        id="image"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
+
+    <div className="mb-4">
+      <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
+        Title:
+      </label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value={formData.title}
+        onChange={handleInputChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
+
+    <div className="flex justify-center">
+      <button
+        type="submit"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+      >
+        Save Changes
+      </button>
+      <button
+        type="button"
+        onClick={handleCancelEdit}
+        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        Cancel Edit
+      </button>
+    </div>
+  </form>
+)}
+
 
       <div>
         {mediaData.map((media) => (
