@@ -29,7 +29,7 @@ export default function SideBar() {
                             >
                                 <Icon icon="iconamoon:menu-burger-horizontal-duotone" />
                             </button>
-                            <h1 className="text-2xl font-bold p-4">{location}</h1>
+                            <h1 className="text-2xl font-bold p-4 capitalize">{location}</h1>
                         </div>
                         <img className='sm:h-[60px] sm:w-[100px] h-6 w-10 mr-10' src='https://res.cloudinary.com/dzhdarh4q/image/upload/v1699014385/Reifenhauser/ReifenhauserLogo_hhc7wi.svg' alt='Logo' />
                     </div>
@@ -47,14 +47,14 @@ export default function SideBar() {
 
                             <div>
                                 <ul className='flex flex-col gap-5 mt-5'>
-                                    <Nav title={"Home"} destination={""} />
-                                    <Nav title={"About Us"} destination={"AboutUs"} />
-                                    <Nav title={"Services"} destination={"Services"} />
-                                    <Nav title={"Principals"} destination={"Principals"} />
+                                    <Nav title={"Home Banner"} destination={""} />
                                     <Nav title={"Events"} destination={"Events"} />
+                                    <Nav title={"Testimonials"} destination={"Testimonials"} />
+                                    <Nav title={"Principals"} destination={"Principals"} />
                                     <Nav title={"Media"} destination={"Media"} />
                                     <Nav title={"Careers"} destination={"Careers"} />
                                     <Nav title={"Contact us"} destination={"ContactUs"} />
+                                    <Nav title={"Newsletter Subscription"} destination={"Newsletter"} />
                                 </ul>
                             </div>
                         </div>
