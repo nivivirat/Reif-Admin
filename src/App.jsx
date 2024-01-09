@@ -3,6 +3,8 @@ import Events from './Components/Events/Events';
 import SideBar from './Components/Common/SideBar/SideBar';
 import Careers from './Components/Careers/Careers';
 import ContactUs from './Components/ContactUs/ContactUs';
+import AdminPanel from './Components/Media/Media';
+import AdminPanel1 from './Components/Media/MediaCard'
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
             <Route path="/Events" element={<Events />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contactUs" element={<ContactUs />} />
+             <Route path="/media" element={<AdminPanel />} />
+            <Route path="/mediacard" element={<AdminPanel1 />} />
           </Routes>
         </div>
 
