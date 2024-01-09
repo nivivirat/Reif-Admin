@@ -21,7 +21,7 @@ const initialTestimonialState = {
   description: '',
 };
 
-function AdminPanel() {
+function TestAdmin() {
   const [testimonials, setTestimonials] = useState([]);
   const [testimonial, setTestimonial] = useState(initialTestimonialState);
   const [editingId, setEditingId] = useState(null);
@@ -238,4 +238,4 @@ function AdminPanel() {
   );
 }
 
-export default AdminPanel;
+export default TestAdmin;
