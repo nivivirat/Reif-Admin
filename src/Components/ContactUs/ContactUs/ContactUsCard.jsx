@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
 import { onValue, ref, getDatabase, update, remove } from 'firebase/database';
+import { CSVLink } from "react-csv";
 
 const ContactUsCard = ({ contactData }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,6 @@ const ContactUsCard = ({ contactData }) => {
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = contactData.slice(indexOfFirstItem, indexOfLastItem);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -47,34 +47,66 @@ const ContactUsCard = ({ contactData }) => {
     };
 
     useEffect(() => {
-        // Filter the contact data whenever searchTerm changes
-        const filtered = contactData.filter((contact) => {
-            return (
-                contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                contact.phoneNumber.includes(searchTerm) ||
-                contact.message.toLowerCase().includes(searchTerm)
-            );
-        });
+        // Filter and sort the contact data whenever searchTerm changes
+        const filtered = contactData
+            .filter((contact) => {
+                return (
+                    contact.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    contact.phoneNumber.includes(searchTerm) ||
+                    contact.message.toLowerCase().includes(searchTerm)
+                );
+            })
+            .sort((a, b) => {
+                const timestampA = new Date(a.timestamp);
+                const timestampB = new Date(b.timestamp);
+                return timestampB - timestampA; // Sort in descending order
+            });
+
         setFilteredContacts(filtered);
     }, [searchTerm, contactData]);
+
+
+    const currentItems = filteredContacts.slice(indexOfFirstItem, indexOfLastItem);
+
+    const csvData = filteredContacts.map((contact) => ({
+        'First Name': contact.firstName,
+        'Email': contact.email,
+        'Phone Number': contact.phoneNumber,
+        'Message': contact.message,
+        'Timestamp': convertToIST(contact.timestamp),
+    }));
+
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
     return (
         <div className='max-w-full mr-10 mt-10'>
 
             <div className="mb-4 flex justify-between items-center">
-                <input
-                    type="text"
-                    className="px-3 py-1 border border-gray-300 rounded-md"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button
-                    className="cursor-pointer bg-primary text-white px-3 py-1 rounded-md ml-2"
-                >
-                    Search
-                </button>
+                <div>
+                    <input
+                        type="text"
+                        className="px-3 py-1 w-[300px] border border-gray-300 rounded-md"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    <button
+                        className="cursor-pointer bg-primary text-white px-3 py-1 rounded-md ml-2"
+                    >
+                        Search
+                    </button>
+                </div>
+                <div>
+                    <div>
+                        <CSVLink data={csvData} filename={`Contact-Us-${formattedDate}.csv`} className="cursor-pointer px-3 py-1 bg-green-500 text-white rounded-md ml-2">
+                            Export as excel
+                        </CSVLink>
+                    </div>
+                </div>
             </div>
 
             <table className="w-full divide-y divide-gray-200 border border-black">
@@ -90,7 +122,7 @@ const ContactUsCard = ({ contactData }) => {
                     </tr>
                 </thead>
                 <tbody className="bg-white divide-gray-200">
-                    {filteredContacts.map((contact, index) => (
+                    {currentItems.map((contact, index) => (
                         <tr key={index} className="hover:bg-gray-50">
                             <td className="border border-black px-6 py-4 whitespace-nowrap">{indexOfFirstItem + index + 1}</td>
                             <td className="border border-black px-6 py-4 ">{contact.firstName}</td>
