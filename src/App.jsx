@@ -8,6 +8,7 @@ import AdminPanel1 from './Components/Media/MediaCard'
 import Newsletter from './Components/Newsletter/Newsletter';
 import Home from './Components/Home/Home';
 import TestAdmin from './Components/Testinomials/Testinomials';
+import Principals from './Components/Principals/Principals';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/Newsletter" element={<Newsletter />} />
             <Route path="/" element={<Home />} />
             <Route path="/testimonials" element={<TestAdmin />} />
+            <Route path="/principals" element={<Principals />} />
           </Routes>
         </div>
 
