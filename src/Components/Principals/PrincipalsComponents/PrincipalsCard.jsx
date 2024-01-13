@@ -2,8 +2,8 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-export default function PrincipalsCard({ id, img, backContent, back2, back3, backLink, company_name, onDelete, onEdit }) {
-    
+export default function PrincipalsCard({ id, order, onOrderChange, img, backContent, back2, back3, backLink, company_name, onDelete, onEdit }) {
+
     const [card, setCard] = useState(true);
 
     function handleClick() {
@@ -16,6 +16,10 @@ export default function PrincipalsCard({ id, img, backContent, back2, back3, bac
 
     const handleMouseLeave = () => {
         setCard(true);
+    };
+
+    const handleOrderChange = (newOrder) => {
+        onOrderChange(newOrder);
     };
 
     const formattedLink = backLink && (backLink.startsWith('http://') || backLink.startsWith('https://')) ? backLink : `https://${backLink}`;
@@ -44,12 +48,18 @@ export default function PrincipalsCard({ id, img, backContent, back2, back3, bac
                     <Icon icon="tabler:edit" />
                 </button>
                 <button onClick={() => onDelete(id)} className="text-black text-3xl py-1 px-2 rounded">
-                <Icon icon="ic:twotone-delete" />
+                    <Icon icon="ic:twotone-delete" />
                 </button>
             </div>
             <p className='font-semibold text-black'>
-                {company_name ? company_name : "ling"}
+                {company_name ? company_name : "ling"} - {order}
             </p>
+            <button
+                className="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
+                onClick={() => handleOrderChange(prompt('Enter new order:'))}
+            >
+                Change Order
+            </button>
         </div>
     );
 }
@@ -62,6 +72,8 @@ PrincipalsCard.propTypes = {
     back3: PropTypes.string.isRequired,
     backLink: PropTypes.string.isRequired,
     company_name: PropTypes.string.isRequired,
+    order: PropTypes.string.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onOrderChange: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
 };

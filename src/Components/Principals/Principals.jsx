@@ -1,4 +1,4 @@
-import { onValue, ref, push, set, remove } from 'firebase/database';
+import { onValue, ref, push, set, remove, update } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { db } from '../../../firebase';
 import PrincipalsCard from './PrincipalsComponents/PrincipalsCard';
@@ -140,6 +140,11 @@ export default function Principals() {
         }
     };
 
+    const handleOrderChange = (section, cardId, newOrder) => {
+        const cardRef = ref(db, `principals/${section}/${cardId}`);
+        update(cardRef, { order: newOrder });
+    };
+
     return (
         <div className="container mx-auto p-4">
             <button
@@ -168,15 +173,20 @@ export default function Principals() {
                         </div>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {Object.entries(items).map(([itemId, item]) => (
-                            <PrincipalsCard
-                                key={itemId}
-                                id={itemId}
-                                onEdit={() => handleEditClick(itemId)}
-                                onDelete={() => handleDeleteClick(itemId)}
-                                {...item}
-                            />
-                        ))}
+                        {Object.entries(items)
+                            .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
+                            .map(([itemId, item]) => (
+                                <PrincipalsCard
+                                    key={itemId}
+                                    id={itemId}
+                                    onEdit={() => handleEditClick(itemId)}
+                                    onDelete={() => handleDeleteClick(itemId)}
+                                    onOrderChange={(newOrder) =>
+                                        handleOrderChange(section, itemId, newOrder)
+                                    }
+                                    {...item}
+                                />
+                            ))}
                     </div>
                     {isAddingNewCard ? (
                         <NewCardForm
@@ -194,7 +204,7 @@ export default function Principals() {
                             isOpen={isOpen}
                             topic={"Edit Card"}
                             onClose={() => setIsOpen(false)}
-                            onEditCard={() => addNewCard(currentSection)}  
+                            onEditCard={() => addNewCard(currentSection)}
                             section={currentSection}
                             newCardForm={newCardForm}
                             handleFormChange={handleFormChange}
