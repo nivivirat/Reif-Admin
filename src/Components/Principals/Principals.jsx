@@ -20,6 +20,8 @@ export default function Principals() {
     const [editingCardId, setEditingCardId] = useState(null);
     const [isAddingNewCard, setIsAddingNewCard] = useState(false);
 
+    const [changeSectionOrder, setChangeSectionOrder] = useState(false);
+
     useEffect(() => {
         const reff = ref(db, 'principals');
         onValue(reff, (snapshot) => {
@@ -141,78 +143,141 @@ export default function Principals() {
     };
 
     const handleOrderChange = (section, cardId, newOrder) => {
+        if (newOrder === "" || isNaN(newOrder)) {
+            // If new order is empty or not a number, do nothing
+            return;
+        }
+
         const cardRef = ref(db, `principals/${section}/${cardId}`);
         update(cardRef, { order: newOrder });
     };
 
+    const handleSectionOrderChange = (sectionId) => {
+        const newOrder = prompt(`Enter the new order for ${sectionId}:`);
+        if (newOrder !== null && !isNaN(newOrder)) {
+            const sectionRef = ref(db, `principals/${sectionId}`);
+            update(sectionRef, { s_order: parseInt(newOrder, 10) });
+        }
+    };
+
     return (
         <div className="container mx-auto p-4">
-            <button
-                className="ml-4 bg-green-500 text-white py-1 px-2 rounded"
-                onClick={handleAddSectionClick}
-            >
-                Add Section
-            </button>
-            {Object.entries(principalsData).map(([section, items]) => (
-                <div key={section} className="mb-8 relative">
-                    <div className='flex flex-row justify-between mr-[100px] my-10'>
-                        <h2 className="text-2xl font-bold mb-4">
-                            {section}
-                        </h2>
-                        <div>
-                            <button
-                                className="ml-4 bg-primary text-white py-1 px-2 rounded"
-                                onClick={() => {
-                                    setCurrentSection(section);
-                                    setIsOpen(true);
-                                    setIsAddingNewCard(true);
-                                }}
-                            >
-                                Add Card
-                            </button>
+            <div>
+                {/* <button
+                    className="ml-4 bg-green-500 text-white py-1 px-2 rounded"
+                    onClick={handleAddSectionClick}
+                >
+                    Add Section
+                </button> */}
+                <button
+                    className="ml-4 bg-primary text-white py-1 px-2 rounded"
+                    onClick={() => setChangeSectionOrder(true)}
+                >
+                    Change order of section
+                </button>
+            </div>
+            {Object.entries(principalsData)
+                .sort(([, a], [, b]) => a.s_order - b.s_order) // Sort sections based on order
+                .map(([section, sectionData]) => (
+                    <div key={section} className="mb-8 relative">
+                        <div className='flex flex-row justify-between mr-[100px] my-10'>
+                            <div>
+                                <h2 className="text-2xl font-bold mb-4">
+                                    {section}
+                                </h2>
+                            </div>
+                            <div>
+                                <button
+                                    className="ml-4 bg-primary text-white py-1 px-2 rounded"
+                                    onClick={() => {
+                                        setCurrentSection(section);
+                                        setIsOpen(true);
+                                        setIsAddingNewCard(true);
+                                    }}
+                                >
+                                    Add Card
+                                </button>
+                                <button
+                                    className="ml-2 bg-primary text-white py-1 px-2 rounded"
+                                    onClick={() => handleSectionOrderChange(section)}
+                                >
+                                    Change Order
+                                </button>
+                            </div>
                         </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {Object.entries(sectionData)
+                                .filter(([key]) => key !== 's_order') // Exclude the section order field
+                                .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
+                                .map(([itemId, item]) => (
+                                    <PrincipalsCard
+                                        key={itemId}
+                                        id={itemId}
+                                        onEdit={() => handleEditClick(itemId)}
+                                        onDelete={() => handleDeleteClick(itemId)}
+                                        onOrderChange={(newOrder) => handleOrderChange(section, itemId, newOrder)}
+                                        {...item}
+                                    />
+                                ))}
+
+                        </div>
+                        {isAddingNewCard ? (
+                            <NewCardForm
+                                isOpen={isOpen}
+                                topic={"Add New Card"}
+                                onClose={() => setIsOpen(false)}
+                                onAddCard={addNewCard}
+                                section={currentSection}
+                                newCardForm={newCardForm}
+                                handleFormChange={handleFormChange}
+                                handleFileChange={handleFileChange}
+                            />
+                        ) : (
+                            <EditForm
+                                isOpen={isOpen}
+                                topic={"Edit Card"}
+                                onClose={() => setIsOpen(false)}
+                                onEditCard={() => addNewCard(currentSection)}
+                                section={currentSection}
+                                newCardForm={newCardForm}
+                                handleFormChange={handleFormChange}
+                                handleFileChange={handleFileChange}
+                            />
+                        )}
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {Object.entries(items)
-                            .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
-                            .map(([itemId, item]) => (
-                                <PrincipalsCard
-                                    key={itemId}
-                                    id={itemId}
-                                    onEdit={() => handleEditClick(itemId)}
-                                    onDelete={() => handleDeleteClick(itemId)}
-                                    onOrderChange={(newOrder) =>
-                                        handleOrderChange(section, itemId, newOrder)
-                                    }
-                                    {...item}
+                ))}
+            {changeSectionOrder ? (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
+                    <h2 className="text-xl font-bold mb-4">Change Section Order</h2>
+                    {Object.entries(principalsData)
+                        .sort(([, a], [, b]) => a.s_order - b.s_order)
+                        .map(([section, sectionData]) => (
+                            <div key={section} className="mb-4">
+                                <span className="mr-4">{section}:</span>
+                                <input
+                                    type="number"
+                                    value={sectionData.s_order}
+                                    onChange={(e) => {
+                                        const newOrder = parseInt(e.target.value, 10);
+                                        if (!isNaN(newOrder)) {
+                                            const sectionRef = ref(db, `principals/${section}`);
+                                            update(sectionRef, { s_order: newOrder });
+                                        }
+                                    }}
                                 />
-                            ))}
-                    </div>
-                    {isAddingNewCard ? (
-                        <NewCardForm
-                            isOpen={isOpen}
-                            topic={"Add New Card"}
-                            onClose={() => setIsOpen(false)}
-                            onAddCard={addNewCard}
-                            section={currentSection}
-                            newCardForm={newCardForm}
-                            handleFormChange={handleFormChange}
-                            handleFileChange={handleFileChange}
-                        />
-                    ) : (
-                        <EditForm
-                            isOpen={isOpen}
-                            topic={"Edit Card"}
-                            onClose={() => setIsOpen(false)}
-                            onEditCard={() => addNewCard(currentSection)}
-                            section={currentSection}
-                            newCardForm={newCardForm}
-                            handleFormChange={handleFormChange}
-                            handleFileChange={handleFileChange}
-                        />
-                    )}
+                            </div>
+                        ))}
+                    <button
+                        className="bg-primary text-white py-1 px-2 rounded"
+                        onClick={() => setChangeSectionOrder(false)}
+                    >
+                        Save Changes
+                    </button>
                 </div>
-            ))}
+            ) : (
+                <div></div>
+            )}
+
         </div>
     );
 }
