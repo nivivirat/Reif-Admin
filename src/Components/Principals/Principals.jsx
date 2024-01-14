@@ -1,4 +1,4 @@
-import { onValue, ref, push, set, remove, update } from 'firebase/database';
+import { onValue, ref, push, set, remove, update, get } from 'firebase/database';
 import { useEffect, useState } from 'react';
 import { db } from '../../../firebase';
 import PrincipalsCard from './PrincipalsComponents/PrincipalsCard';
@@ -24,6 +24,13 @@ export default function Principals() {
 
     const [changeSectionOrder, setChangeSectionOrder] = useState(false);
     const [changeCardsOrder, setChangeCardsOrder] = useState(false);
+
+    // Add these lines with your other state declarations
+    const [isEditingReifenhauserMachinary, setIsEditingReifenhauserMachinary] = useState(false);
+    const [editingReifenhauserMachinaryData, setEditingReifenhauserMachinaryData] = useState(null);
+    const [editingReifenhauserMachinaryDataID, setEditingReifenhauserMachinaryDataID] = useState(null);
+
+    const [isAddingReifenhauserMachinary, setIsAddingReifenhauserMachinary] = useState(false);
 
     useEffect(() => {
         const reff = ref(db, 'principals');
@@ -73,43 +80,6 @@ export default function Principals() {
         setEditingCardId(null); // Reset editing state
         setIsOpen(false);
         setIsAddingNewCard(false);
-    };
-
-    const handleAddReifenhauserMachinaryCard = (section) => {
-        const heading = prompt("Enter heading:");
-        const link = prompt("Enter link:");
-        const sub = prompt("Enter sub text:");
-
-        if (heading && link && sub) {
-            const sectionData = principalsData[section];
-            const order = sectionData ? Object.keys(sectionData).length + 1 : 0;
-
-            const newCardData = {
-                heading,
-                link,
-                sub,
-                order,  // Assigning the order field based on the number of cards
-            };
-
-            const sectionRef = ref(db, `principals/${section}`);
-            const newCardRef = push(sectionRef);
-            const newCardKey = newCardRef.key;
-
-            set(ref(db, `principals/${section}/${newCardKey}`), newCardData);
-
-            // Reset state and close the form
-            setNewCardForm({
-                company_name: "",
-                img: null,
-                backContent: "",
-                back2: "",
-                back3: "",
-                backLink: "",
-            });
-            setEditingCardId(null);
-            setIsOpen(false);
-            setIsAddingNewCard(false);
-        }
     };
 
 
@@ -204,6 +174,33 @@ export default function Principals() {
         }
     };
 
+    const handleReifMachinaryEdit = (cardId) => {
+        const section = 'Reifenhauser Machinary';
+        const cardData = principalsData[section][cardId];
+
+        if (cardData) {
+            setEditingReifenhauserMachinaryDataID(cardId);
+            setEditingReifenhauserMachinaryData(cardData);
+            setIsEditingReifenhauserMachinary(true);
+        } else {
+            console.error(`Card data not found for cardId: ${cardId}`);
+        }
+    };
+
+    const initialCardData = {
+        heading: '',
+        sub: '',
+        link: '',
+        id: null
+        // Add other fields as needed
+    };
+
+
+    function handleAddReifenhauserMachinaryCard(section) {
+        setEditingReifenhauserMachinaryData(initialCardData);
+        setIsAddingReifenhauserMachinary(true);
+    }
+
     return (
         <div className="container mx-auto p-4">
             <div>
@@ -236,6 +233,7 @@ export default function Principals() {
                                     onClick={() => {
                                         if (section === 'Reifenhauser Machinary') {
                                             // Use a different method or form for Reifenhauser Machinary
+                                            setCurrentSection(section);
                                             handleAddReifenhauserMachinaryCard(section);
                                         } else {
                                             // Use the default method for other sections
@@ -272,6 +270,8 @@ export default function Principals() {
                                                 heading={item.heading}
                                                 sub={item.sub}
                                                 link={item.link}
+                                                onDelete={() => handleDeleteClick(itemId)}
+                                                onEdit={() => handleReifMachinaryEdit(itemId)}
                                                 onOrderChange={(newOrder) => handleOrderChange(section, itemId, newOrder)}
                                             />
                                         ) : (
@@ -317,7 +317,12 @@ export default function Principals() {
             {changeSectionOrder ? (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold">Change Section Order</h2>
+                        <div className='flex flex-col'>
+                            <h2 className="text-xl font-bold">Change Section Order</h2>
+                            <p className="text-sm mt-4 text-primary">
+                                (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)
+                            </p>
+                        </div>
                         <button
                             className="text-gray-500 hover:text-gray-700"
                             onClick={() => setChangeSectionOrder(false)}
@@ -357,7 +362,13 @@ export default function Principals() {
             {changeCardsOrder ? (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
                     <div className="flex justify-between items-center mb-4">
-                        <h2 className="text-xl font-bold">Change Cards Order in Section: {currentSection}</h2>
+                        <div className='flex flex-col'>
+                            {/* <h2 className="text-xl font-bold">Change Section Order</h2> */}
+                            <h2 className="text-xl font-bold">Change Cards Order in Section: {currentSection}</h2>
+                            <p className="text-sm mt-4 text-primary">
+                                (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)
+                            </p>
+                        </div>
                         <button
                             className="text-gray-500 hover:text-gray-700"
                             onClick={() => setChangeCardsOrder(false)}
@@ -399,6 +410,168 @@ export default function Principals() {
             ) : (
                 <div></div>
             )}
+
+            {isEditingReifenhauserMachinary && editingReifenhauserMachinaryData && (
+                <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md'>
+                    <div className='flex flex-row justify-between mb-4'>
+                        <h2 className="text-xl font-bold">Edit Reifenhauser Machinary Card</h2>
+                        <button
+                            className="text-gray-500 hover:text-gray-700 ml-10"
+                            onClick={() => setIsEditingReifenhauserMachinary(false)}
+                        >
+                            <Icon icon="ph:x-bold" />
+                        </button>
+                    </div>
+                    <form>
+                        <div className="mb-4">
+                            <label htmlFor="heading" className="block text-sm font-medium text-gray-600">Heading</label>
+                            <input
+                                type="text"
+                                id="heading"
+                                name="heading"
+                                value={editingReifenhauserMachinaryData.heading}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, heading: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="sub" className="block text-sm font-medium text-gray-600">Sub</label>
+                            <input
+                                type="text"
+                                id="sub"
+                                name="sub"
+                                value={editingReifenhauserMachinaryData.sub}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, sub: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="link" className="block text-sm font-medium text-gray-600">Link</label>
+                            <input
+                                type="text"
+                                id="link"
+                                name="link"
+                                value={editingReifenhauserMachinaryData.link}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, link: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="bg-primary text-white py-2 px-4 rounded-md"
+                                onClick={() => {
+                                    // Handle the form submission here
+                                    const updatedCardData = {
+                                        heading: editingReifenhauserMachinaryData.heading,
+                                        sub: editingReifenhauserMachinaryData.sub,
+                                        link: editingReifenhauserMachinaryData.link,
+                                    };
+
+                                    // You may want to include validation before updating the card
+                                    // ...
+
+                                    // Update the card data in the database using the update function
+                                    const cardRef = ref(db, `principals/Reifenhauser Machinary/${editingReifenhauserMachinaryDataID}`);
+                                    update(cardRef, updatedCardData);
+
+                                    // Reset the editing state
+                                    setIsEditingReifenhauserMachinary(false);
+                                }}
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            )}
+
+
+            {isAddingReifenhauserMachinary && (
+                <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md'>
+                    <div className='flex flex-row justify-between mb-4'>
+                        <h2 className="text-xl font-bold">Add Reifenhauser Machinary Card</h2>
+                        <button
+                            className="text-gray-500 hover:text-gray-700 ml-10"
+                            onClick={() => setIsAddingReifenhauserMachinary(false)}
+                        >
+                            <Icon icon="ph:x-bold" />
+                        </button>
+                    </div>
+                    <form>
+                        <div className="mb-4">
+                            <label htmlFor="heading" className="block text-sm font-medium text-gray-600">Heading</label>
+                            <input
+                                type="text"
+                                id="heading"
+                                name="heading"
+                                value={editingReifenhauserMachinaryData.heading || ""}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, heading: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="sub" className="block text-sm font-medium text-gray-600">Sub</label>
+                            <input
+                                type="text"
+                                id="sub"
+                                name="sub"
+                                value={editingReifenhauserMachinaryData.sub || ""}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, sub: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="link" className="block text-sm font-medium text-gray-600">Link</label>
+                            <input
+                                type="text"
+                                id="link"
+                                name="link"
+                                value={editingReifenhauserMachinaryData.link || ""}
+                                onChange={(e) => setEditingReifenhauserMachinaryData({ ...editingReifenhauserMachinaryData, link: e.target.value })}
+                                className="mt-1 p-2 border border-gray-300 rounded-md w-full"
+                            />
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="bg-primary text-white py-2 px-4 rounded-md"
+                                onClick={async () => {
+                                    // Fetch existing cards
+                                    const cardsRef = ref(db, 'principals/Reifenhauser Machinary');
+                                    const snapshot = await get(cardsRef);
+                                    const existingCards = snapshot.val() || {};
+
+                                    // Determine the order for the new card
+                                    const order = Object.keys(existingCards).length;
+
+                                    // Include order in the new card data
+                                    const newCardData = {
+                                        heading: editingReifenhauserMachinaryData.heading,
+                                        sub: editingReifenhauserMachinaryData.sub,
+                                        link: editingReifenhauserMachinaryData.link,
+                                        order: order,
+                                    };
+
+                                    // Add the new card data to the database
+                                    const newCardRef = push(cardsRef);
+                                    set(newCardRef, newCardData);
+
+                                    // Reset the form state
+                                    setEditingReifenhauserMachinaryData(initialCardData);
+                                    setIsAddingReifenhauserMachinary(false);
+                                }}
+                            >
+                                Save Changes
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            )}
+
+
 
 
 

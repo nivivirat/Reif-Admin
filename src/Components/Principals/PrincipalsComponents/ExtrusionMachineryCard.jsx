@@ -1,28 +1,31 @@
-export default function ExtrusionMachineryCard({ heading, sub, link, onOrderChange }) {
+import { Icon } from "@iconify/react";
+
+export default function ExtrusionMachineryCard({ id, heading, sub, link, onEdit, onDelete }) {
   console.log(heading);
   console.log(sub);
   console.log(link);
-  // Add "https://" if the link doesn't already have a protocol
-  // const formattedLink = link.startsWith('http://') || link.startsWith('https://') ? link : `https://${link}`;
 
-  // const handleOrderChange = (newOrder) => {
-  //   onOrderChange(newOrder);
-  // };
+  // Add "https://" if the link doesn't already have a protocol
+  const formattedLink = link.startsWith('http://') || link.startsWith('https://') ? link : `https://${link}`;
 
   return (
-    <div>
-      <div className="font-semibold text-[18px]">{heading}</div>
-      <div className="text-[16px]">{sub}</div>
-      <a href={link} target="_blank" rel="noopener noreferrer" className="text-primary underline">
-        {link}
-      </a>
+    <div className="flex flex-row">
+      <div>
+        <div className="font-semibold text-[18px]">{heading}</div>
+        <div className="text-[16px]">{sub}</div>
+        <a href={formattedLink} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+          {link}
+        </a>
+      </div>
 
-      {/* <button
-        className="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
-        onClick={() => handleOrderChange(prompt('Enter new order:'))}
-      >
-        Change Order
-      </button> */}
+      <div className='flex flex-col'>
+        <button onClick={() => onEdit(id)} className="text-black text-3xl py-1 px-2 rounded mb-2">
+          <Icon icon="tabler:edit" />
+        </button>
+        <button onClick={() => onDelete(id)} className="text-black text-3xl py-1 px-2 rounded">
+          <Icon icon="ic:twotone-delete" />
+        </button>
+      </div>
     </div>
   );
 }
