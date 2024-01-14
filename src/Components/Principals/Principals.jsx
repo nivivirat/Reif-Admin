@@ -223,11 +223,10 @@ export default function Principals() {
                     <div key={section} className="mb-8 relative">
                         <div className='flex flex-row justify-between mr-[100px] my-10'>
                             <div>
-                                <h2 className="text-2xl font-bold mb-4">
-                                    {section}
-                                </h2>
+                                <p className="text-primary font-semibold lg:text-[40px] my-5 text-[35px]">{section}</p>
+
                             </div>
-                            <div>
+                            <div className='my-5'>
                                 <button
                                     className="ml-4 bg-primary text-white py-1 px-2 rounded"
                                     onClick={() => {
@@ -258,7 +257,7 @@ export default function Principals() {
                             </div>
                         </div>
                         <div className="grid lg:grid-cols-4 grid-cols-2 lg:grid-flow-row gap-10">
-                        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> */}
+                            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> */}
                             {Object.entries(sectionData)
                                 .filter(([key]) => key !== 's_order') // Exclude the section order field
                                 .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
@@ -318,10 +317,10 @@ export default function Principals() {
             {changeSectionOrder ? (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
                     <div className="flex justify-between items-center mb-4">
-                        <div className='flex flex-col'>
-                            <h2 className="text-xl font-bold">Change Section Order</h2>
-                            <p className="text-sm mt-4 text-primary">
-                                (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)
+                        <div className="flex flex-col">
+                            <h2 className="text-2xl font-bold mb-2">Change Section Order</h2>
+                            <p className="text-sm text-primary">
+                                (Enter new numeric orders for each section. The sections will be ordered in ascending order based on the entered numbers.)
                             </p>
                         </div>
                         <button
@@ -334,10 +333,11 @@ export default function Principals() {
                     {Object.entries(principalsData)
                         .sort(([, a], [, b]) => a.s_order - b.s_order)
                         .map(([section, sectionData]) => (
-                            <div key={section} className="mb-4">
-                                <span className="mr-4">{section}:</span>
+                            <div key={section} className="mb-4 flex items-center">
+                                <span className="mr-4 text-gray-600">{section}:</span>
                                 <input
                                     type="number"
+                                    className="px-3 py-1 border border-gray-300 rounded-md"
                                     value={sectionData.s_order}
                                     onChange={(e) => {
                                         const newOrder = parseInt(e.target.value, 10);
@@ -350,7 +350,7 @@ export default function Principals() {
                             </div>
                         ))}
                     <button
-                        className="bg-primary text-white py-1 px-2 rounded"
+                        className="bg-primary text-white py-2 px-4 rounded-md"
                         onClick={() => setChangeSectionOrder(false)}
                     >
                         Save Changes
@@ -360,12 +360,13 @@ export default function Principals() {
                 <div></div>
             )}
 
+
             {changeCardsOrder ? (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
-                    <div className="flex justify-between items-center mb-4">
-                        <div className='flex flex-col'>
-                            <h2 className="text-xl font-bold">Change Cards Order in Section: {currentSection}</h2>
-                            <p className="text-sm mt-4 text-primary">
+                    <div className="flex justify-between place-items-start mb-4">
+                        <div className="flex flex-col">
+                            <h2 className="text-2xl font-bold mb-2">Change Cards Order in Section: {currentSection}</h2>
+                            <p className="text-sm text-primary">
                                 (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)
                             </p>
                         </div>
@@ -380,28 +381,34 @@ export default function Principals() {
                         .filter(([key]) => key !== 's_order')
                         .sort(([, a], [, b]) => a.order - b.order)
                         .map(([itemId, item]) => (
-                            <div key={itemId} className="flex items-center mb-2">
-                                {/* <span className="mr-2">{item.company_name}:</span> */}
-                                {currentSection === 'Reifenhauser Machinary'
-                                    ? item.heading // Show heading for Reifenhauser Machinary
-                                    : item.company_name // Show company name for other sections
-                                }:
-                                <input
-                                    type="number"
-                                    className='px-3'
-                                    value={item.order}
-                                    onChange={(e) => {
-                                        const newOrder = parseInt(e.target.value, 10);
-                                        if (!isNaN(newOrder)) {
-                                            const cardRef = ref(db, `principals/${currentSection}/${itemId}`);
-                                            update(cardRef, { order: newOrder });
-                                        }
-                                    }}
-                                />
+                            <div key={itemId} className="flex items-center mb-4">
+                                <span className="mr-4 text-gray-600">
+                                    {currentSection === 'Reifenhauser Machinary' ? (
+                                        <p className="font-semibold">{item.heading}:</p>
+                                    ) : (
+                                        <p className="font-semibold">{item.company_name}:</p>
+                                    )}
+                                </span>
+                                <div className="flex items-center">
+                                    {/* <span className="text-gray-600">Order:</span> */}
+                                    <input
+                                        type="number"
+                                        // className="px-3 py-1 border border-gray-300 rounded-md"
+                                        className="px-3 py-1 border border-gray-300 rounded-md"
+                                        value={item.order}
+                                        onChange={(e) => {
+                                            const newOrder = parseInt(e.target.value, 10);
+                                            if (!isNaN(newOrder)) {
+                                                const cardRef = ref(db, `principals/${currentSection}/${itemId}`);
+                                                update(cardRef, { order: newOrder });
+                                            }
+                                        }}
+                                    />
+                                </div>
                             </div>
                         ))}
                     <button
-                        className="bg-primary text-white py-1 px-2 rounded"
+                        className="bg-primary text-white py-2 px-4 rounded-md"
                         onClick={() => setChangeCardsOrder(false)}
                     >
                         Save Changes
@@ -410,6 +417,8 @@ export default function Principals() {
             ) : (
                 <div></div>
             )}
+
+
 
             {isEditingReifenhauserMachinary && editingReifenhauserMachinaryData && (
                 <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md'>
