@@ -257,7 +257,8 @@ export default function Principals() {
                                 </button>
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid lg:grid-cols-4 grid-cols-2 lg:grid-flow-row gap-10">
+                        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"> */}
                             {Object.entries(sectionData)
                                 .filter(([key]) => key !== 's_order') // Exclude the section order field
                                 .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
@@ -363,7 +364,6 @@ export default function Principals() {
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
                     <div className="flex justify-between items-center mb-4">
                         <div className='flex flex-col'>
-                            {/* <h2 className="text-xl font-bold">Change Section Order</h2> */}
                             <h2 className="text-xl font-bold">Change Cards Order in Section: {currentSection}</h2>
                             <p className="text-sm mt-4 text-primary">
                                 (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)

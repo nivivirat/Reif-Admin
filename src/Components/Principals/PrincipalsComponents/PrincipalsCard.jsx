@@ -43,7 +43,7 @@ export default function PrincipalsCard({ id, order, onOrderChange, img, backCont
                     </div>
                 }
             </div>
-            <div className='absolute top-0 -right-20 mt-4 flex flex-col'>
+            <div className='absolute top-0 -right-10 mt-4 flex flex-col'>
                 <button onClick={() => onEdit(id)} className="text-black text-3xl py-1 px-2 rounded mb-2">
                     <Icon icon="tabler:edit" />
                 </button>
@@ -52,7 +52,7 @@ export default function PrincipalsCard({ id, order, onOrderChange, img, backCont
                 </button>
             </div>
             <p className='font-semibold text-black'>
-                {company_name ? company_name : "ling"} - {order}
+                {company_name ? company_name : "undefined"}
             </p>
             {/* <button
                 className="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
