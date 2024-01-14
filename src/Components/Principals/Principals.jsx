@@ -4,6 +4,8 @@ import { db } from '../../../firebase';
 import PrincipalsCard from './PrincipalsComponents/PrincipalsCard';
 import NewCardForm from './PrincipalsComponents/NewForm';
 import EditForm from './PrincipalsComponents/EditForm';
+import ExtrusionMachineryCard from './PrincipalsComponents/ExtrusionMachineryCard';
+import { Icon } from '@iconify/react';
 
 export default function Principals() {
     const [principalsData, setPrincipalsData] = useState({});
@@ -21,6 +23,7 @@ export default function Principals() {
     const [isAddingNewCard, setIsAddingNewCard] = useState(false);
 
     const [changeSectionOrder, setChangeSectionOrder] = useState(false);
+    const [changeCardsOrder, setChangeCardsOrder] = useState(false);
 
     useEffect(() => {
         const reff = ref(db, 'principals');
@@ -30,32 +33,34 @@ export default function Principals() {
     }, []);
 
     const addNewCard = (section) => {
+        let newCardData = {
+            ...newCardForm,
+            id: null, // Set to null initially
+        };
+
         if (editingCardId) {
+            // Editing existing card
             const cardRef = ref(db, `principals/${section}/${editingCardId}`);
-            set(cardRef, newCardForm);
+            newCardData.id = editingCardId; // Set the ID for editing
+            set(cardRef, newCardData);
             setEditingCardId(null); // Reset editing state
         } else {
+            // Adding new card
             const sectionRef = ref(db, `principals/${section}`);
+            const sectionData = principalsData[section];
+            const order = sectionData ? Object.keys(sectionData).length : 0;
+
+            // Assign order to the new card
+            newCardData.order = order;
+
+            // Set the ID for the new card
             const newCardRef = push(sectionRef);
-            const newCardKey = newCardRef.key;
+            newCardData.id = newCardRef.key;
 
-            if (newCardForm.img) {
-                const newCardData = {
-                    ...newCardForm,
-                    id: newCardKey,
-                };
-
-                set(ref(db, `principals/${section}/${newCardKey}`), newCardData);
-            } else {
-                const newCardData = {
-                    ...newCardForm,
-                    id: newCardKey,
-                };
-
-                set(ref(db, `principals/${section}/${newCardKey}`), newCardData);
-            }
+            set(ref(db, `principals/${section}/${newCardData.id}`), newCardData);
         }
 
+        // Reset form and state
         setNewCardForm({
             company_name: "",
             img: null,
@@ -64,10 +69,49 @@ export default function Principals() {
             back3: "",
             backLink: "",
         });
+
         setEditingCardId(null); // Reset editing state
         setIsOpen(false);
         setIsAddingNewCard(false);
     };
+
+    const handleAddReifenhauserMachinaryCard = (section) => {
+        const heading = prompt("Enter heading:");
+        const link = prompt("Enter link:");
+        const sub = prompt("Enter sub text:");
+
+        if (heading && link && sub) {
+            const sectionData = principalsData[section];
+            const order = sectionData ? Object.keys(sectionData).length + 1 : 0;
+
+            const newCardData = {
+                heading,
+                link,
+                sub,
+                order,  // Assigning the order field based on the number of cards
+            };
+
+            const sectionRef = ref(db, `principals/${section}`);
+            const newCardRef = push(sectionRef);
+            const newCardKey = newCardRef.key;
+
+            set(ref(db, `principals/${section}/${newCardKey}`), newCardData);
+
+            // Reset state and close the form
+            setNewCardForm({
+                company_name: "",
+                img: null,
+                backContent: "",
+                back2: "",
+                back3: "",
+                backLink: "",
+            });
+            setEditingCardId(null);
+            setIsOpen(false);
+            setIsAddingNewCard(false);
+        }
+    };
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -190,16 +234,26 @@ export default function Principals() {
                                 <button
                                     className="ml-4 bg-primary text-white py-1 px-2 rounded"
                                     onClick={() => {
-                                        setCurrentSection(section);
-                                        setIsOpen(true);
-                                        setIsAddingNewCard(true);
+                                        if (section === 'Reifenhauser Machinary') {
+                                            // Use a different method or form for Reifenhauser Machinary
+                                            handleAddReifenhauserMachinaryCard(section);
+                                        } else {
+                                            // Use the default method for other sections
+                                            setCurrentSection(section);
+                                            setIsOpen(true);
+                                            setIsAddingNewCard(true);
+                                        }
                                     }}
+
                                 >
                                     Add Card
                                 </button>
                                 <button
                                     className="ml-2 bg-primary text-white py-1 px-2 rounded"
-                                    onClick={() => handleSectionOrderChange(section)}
+                                    onClick={() => {
+                                        setChangeCardsOrder(true);
+                                        setCurrentSection(section);
+                                    }}
                                 >
                                     Change Order
                                 </button>
@@ -210,15 +264,29 @@ export default function Principals() {
                                 .filter(([key]) => key !== 's_order') // Exclude the section order field
                                 .sort(([, a], [, b]) => a.order - b.order) // Sort cards based on order
                                 .map(([itemId, item]) => (
-                                    <PrincipalsCard
-                                        key={itemId}
-                                        id={itemId}
-                                        onEdit={() => handleEditClick(itemId)}
-                                        onDelete={() => handleDeleteClick(itemId)}
-                                        onOrderChange={(newOrder) => handleOrderChange(section, itemId, newOrder)}
-                                        {...item}
-                                    />
+                                    <div key={itemId}>
+                                        {section === 'Reifenhauser Machinary' ? (
+                                            <ExtrusionMachineryCard
+                                                key={itemId}
+                                                id={itemId}
+                                                heading={item.heading}
+                                                sub={item.sub}
+                                                link={item.link}
+                                                onOrderChange={(newOrder) => handleOrderChange(section, itemId, newOrder)}
+                                            />
+                                        ) : (
+                                            <PrincipalsCard
+                                                key={itemId}
+                                                id={itemId}
+                                                onEdit={() => handleEditClick(itemId)}
+                                                onDelete={() => handleDeleteClick(itemId)}
+                                                onOrderChange={(newOrder) => handleOrderChange(section, itemId, newOrder)}
+                                                {...item}
+                                            />
+                                        )}
+                                    </div>
                                 ))}
+
 
                         </div>
                         {isAddingNewCard ? (
@@ -248,7 +316,15 @@ export default function Principals() {
                 ))}
             {changeSectionOrder ? (
                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
-                    <h2 className="text-xl font-bold mb-4">Change Section Order</h2>
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold">Change Section Order</h2>
+                        <button
+                            className="text-gray-500 hover:text-gray-700"
+                            onClick={() => setChangeSectionOrder(false)}
+                        >
+                            <Icon icon="ph:x-bold" />
+                        </button>
+                    </div>
                     {Object.entries(principalsData)
                         .sort(([, a], [, b]) => a.s_order - b.s_order)
                         .map(([section, sectionData]) => (
@@ -277,6 +353,54 @@ export default function Principals() {
             ) : (
                 <div></div>
             )}
+
+            {changeCardsOrder ? (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
+                    <div className="flex justify-between items-center mb-4">
+                        <h2 className="text-xl font-bold">Change Cards Order in Section: {currentSection}</h2>
+                        <button
+                            className="text-gray-500 hover:text-gray-700"
+                            onClick={() => setChangeCardsOrder(false)}
+                        >
+                            <Icon icon="ph:x-bold" />
+                        </button>
+                    </div>
+                    {Object.entries(principalsData[currentSection])
+                        .filter(([key]) => key !== 's_order')
+                        .sort(([, a], [, b]) => a.order - b.order)
+                        .map(([itemId, item]) => (
+                            <div key={itemId} className="flex items-center mb-2">
+                                {/* <span className="mr-2">{item.company_name}:</span> */}
+                                {currentSection === 'Reifenhauser Machinary'
+                                    ? item.heading // Show heading for Reifenhauser Machinary
+                                    : item.company_name // Show company name for other sections
+                                }:
+                                <input
+                                    type="number"
+                                    className='px-3'
+                                    value={item.order}
+                                    onChange={(e) => {
+                                        const newOrder = parseInt(e.target.value, 10);
+                                        if (!isNaN(newOrder)) {
+                                            const cardRef = ref(db, `principals/${currentSection}/${itemId}`);
+                                            update(cardRef, { order: newOrder });
+                                        }
+                                    }}
+                                />
+                            </div>
+                        ))}
+                    <button
+                        className="bg-primary text-white py-1 px-2 rounded"
+                        onClick={() => setChangeCardsOrder(false)}
+                    >
+                        Save Changes
+                    </button>
+                </div>
+            ) : (
+                <div></div>
+            )}
+
+
 
         </div>
     );

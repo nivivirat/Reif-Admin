@@ -54,12 +54,12 @@ export default function PrincipalsCard({ id, order, onOrderChange, img, backCont
             <p className='font-semibold text-black'>
                 {company_name ? company_name : "ling"} - {order}
             </p>
-            <button
+            {/* <button
                 className="bg-gray-300 text-gray-700 px-2 py-1 rounded-md"
                 onClick={() => handleOrderChange(prompt('Enter new order:'))}
             >
                 Change Order
-            </button>
+            </button> */}
         </div>
     );
 }
