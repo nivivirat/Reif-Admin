@@ -33,7 +33,8 @@ export default function PrincipalsCard({ id, order, onOrderChange, img, backCont
                 className='border border-[#b3b3b3] rounded-[20px] flex justify-center place-items-center content-center h-[110px]'
             >
                 {card ?
-                    <img src={img} alt={company_name} className='w-full h-[80px] object-contain' />
+                    <img src={img} alt={company_name} className='w-24 h-auto' />
+                    // <img src={img} alt={companyName} className='' />
                     :
                     <div className='w-full flex-col gap-3 bg-[#e5eaea] border border-[#b3b3b3] rounded-[20px] flex justify-center place-items-center content-center h-[110px]'>
                         <p className='text-[#013A98] text-center md:text-[10px] text-[9px] px-4 font-medium'>{backContent}</p>
