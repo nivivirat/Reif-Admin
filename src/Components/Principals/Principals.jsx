@@ -220,7 +220,7 @@ export default function Principals() {
             {Object.entries(principalsData)
                 .sort(([, a], [, b]) => a.s_order - b.s_order) // Sort sections based on order
                 .map(([section, sectionData]) => (
-                    <div key={section} className="mb-8 relative">
+                    <div key={section} className="mb-8 relative my-10 mt-[100px]">
                         <div className='flex flex-row justify-between mr-[100px] my-10'>
                             <div>
                                 <p className="text-primary font-semibold lg:text-[40px] my-5 text-[35px]">{section}</p>
