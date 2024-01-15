@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react"
 import PropTypes from 'prop-types';
 import { onValue, ref, getDatabase, update, remove } from 'firebase/database';
-
+import { useEffect, useState } from "react";
+import { CSVLink } from 'react-csv';
 
 export default function CareerCard({ data, option }) {
 
@@ -45,9 +46,39 @@ export default function CareerCard({ data, option }) {
         }
     };
 
+    const [csvData, setCsvData] = useState([]);
+
+    const handleDownloadIndividual = (career) => {
+        const individualCsvData = [{
+            email: career.email,
+            fileDownloadURL: career.fileDownloadURL,
+            message: career.message,
+            name: career.name,
+            number: career.number,
+            status: career.status,
+            timestamp: career.timestampIST,
+            // ... add other fields as needed
+        }];
+
+        setCsvData(individualCsvData);
+    };
+
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
+    const sortedData = [...data].sort((a, b) => {
+        const dateA = new Date(a.timestampIST);
+        const dateB = new Date(b.timestampIST);
+
+        return dateB - dateA;
+    });
+
+
     return (
         <div>
-            {data.map((career) => (
+            {sortedData.map((career) => (
                 <div key={career.timestamp} className="bg-white gap-4 flex flex-col p-4 shadow rounded">
                     <div className='bg-base opacity-90 shadow-lg -p-4 rounded flex place-items-center justify-between p-4'>
                         <p className="text-primary uppercase text-3xl font-poppins mb-2">
@@ -65,6 +96,16 @@ export default function CareerCard({ data, option }) {
                             </div>
                             :
                             <div>
+                                <button className="relative text-black hover:text-primary bg-base text-3xl py-2 px-4 rounded-md mb-2">
+                                    <CSVLink
+                                        data={csvData}
+                                        filename={`Careers_Data_${career.email}_${formattedDate}.csv`}
+                                        className="absolute w-full h-full left-0"
+                                        onClick={() => handleDownloadIndividual(career)}
+                                    >
+                                    </CSVLink>
+                                    <Icon icon="material-symbols:download" />
+                                </button>
                                 <button
                                     onClick={() => handleWaitingClick(career.id)}
                                     title="Waiting List"
@@ -88,7 +129,7 @@ export default function CareerCard({ data, option }) {
                                 </button>
                                 <button
                                     onClick={() => handleDeleteClick(career.id)}
-                                    title="Rejected"
+                                    title="delete data"
                                     className="text-black hover:text-red-600 bg-base text-3xl py-2 px-4 rounded-md mb-2"
                                 >
                                     <Icon icon="mdi:delete" />

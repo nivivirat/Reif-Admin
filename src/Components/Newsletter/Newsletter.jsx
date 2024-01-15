@@ -82,13 +82,18 @@ export default function Newsletter() {
         }
     };
 
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1)
+        .toString()
+        .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+
 
     return (
         <div className="py-8">
             <div className="flex flex-row justify-between w-[70%]">
                 <h1 className="text-3xl font-bold mb-4 first-letter:capitalize">Newsletter Subsription</h1>
                 <div>
-                    <CSVLink data={csvData} filename={"newsletter-subscriptions.csv"} className="cursor-pointer px-3 py-1 bg-green-500 text-white rounded-md ml-2">
+                    <CSVLink data={csvData} filename={`Newsletter-subscriptions_${formattedDate}.csv`} className="cursor-pointer px-3 py-1 bg-green-500 text-white rounded-md ml-2">
                         Export as excel
                     </CSVLink>
                 </div>
