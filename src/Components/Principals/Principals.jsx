@@ -377,38 +377,40 @@ export default function Principals() {
                             <Icon icon="ph:x-bold" />
                         </button>
                     </div>
-                    {Object.entries(principalsData[currentSection])
-                        .filter(([key]) => key !== 's_order')
-                        .sort(([, a], [, b]) => a.order - b.order)
-                        .map(([itemId, item]) => (
-                            <div key={itemId} className="flex items-center mb-4">
-                                <span className="mr-4 text-gray-600">
-                                    {currentSection === 'Reifenhauser Machinary' ? (
-                                        <p className="font-semibold">{item.heading}:</p>
-                                    ) : (
-                                        <p className="font-semibold">{item.company_name}:</p>
-                                    )}
-                                </span>
-                                <div className="flex items-center">
-                                    {/* <span className="text-gray-600">Order:</span> */}
-                                    <input
-                                        type="number"
-                                        // className="px-3 py-1 border border-gray-300 rounded-md"
-                                        className="px-3 py-1 border border-gray-300 rounded-md"
-                                        value={item.order}
-                                        onChange={(e) => {
-                                            const newOrder = parseInt(e.target.value, 10);
-                                            if (!isNaN(newOrder)) {
-                                                const cardRef = ref(db, `principals/${currentSection}/${itemId}`);
-                                                update(cardRef, { order: newOrder });
-                                            }
-                                        }}
-                                    />
+                    <div className='h-[300px] overflow-y-scroll py-5'>
+                        {Object.entries(principalsData[currentSection])
+                            .filter(([key]) => key !== 's_order')
+                            .sort(([, a], [, b]) => a.order - b.order)
+                            .map(([itemId, item]) => (
+                                <div key={itemId} className="flex items-center mb-4">
+                                    <span className="mr-4 text-gray-600">
+                                        {currentSection === 'Reifenhauser Machinary' ? (
+                                            <p className="font-semibold">{item.heading}:</p>
+                                        ) : (
+                                            <p className="font-semibold">{item.company_name}:</p>
+                                        )}
+                                    </span>
+                                    <div className="flex items-center">
+                                        {/* <span className="text-gray-600">Order:</span> */}
+                                        <input
+                                            type="number"
+                                            // className="px-3 py-1 border border-gray-300 rounded-md"
+                                            className="px-3 py-1 border border-gray-300 rounded-md"
+                                            value={item.order}
+                                            onChange={(e) => {
+                                                const newOrder = parseInt(e.target.value, 10);
+                                                if (!isNaN(newOrder)) {
+                                                    const cardRef = ref(db, `principals/${currentSection}/${itemId}`);
+                                                    update(cardRef, { order: newOrder });
+                                                }
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                    </div>
                     <button
-                        className="bg-primary text-white py-2 px-4 rounded-md"
+                        className="bg-primary text-white py-2 px-4 rounded-md mt-3"
                         onClick={() => setChangeCardsOrder(false)}
                     >
                         Save Changes
