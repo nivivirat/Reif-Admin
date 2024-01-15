@@ -6,7 +6,12 @@ const NewCardForm = ({ topic, isOpen, onClose, onAddCard, section, newCardForm, 
     return (
         isOpen && (
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
-                <h3 className="text-xl font-bold mb-4">Add New Card  - {section}</h3>
+                <div className='flex flex-col mb-4'>
+                    <h3 className="text-xl font-bold">Add New Card  - {section}</h3>
+                    <p className="text-sm text-primary">
+                        (image dimension around 150px h & 250px w)
+                    </p>
+                </div>
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
                         type="button"
