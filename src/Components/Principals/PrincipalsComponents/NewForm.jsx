@@ -38,10 +38,10 @@ const NewCardForm = ({ topic, isOpen, onClose, onAddCard, section, newCardForm, 
                             name="img"
                             onChange={handleFileChange}
                             className="border p-2 rounded-md w-full"
-                        />
+                        />  
                     </label>
                     <label className="mb-4">
-                        Back Content:
+                        Back Content: <span className='text-gray-400'>(max 15 words)</span>
                         <input
                             type="text"
                             name="backContent"

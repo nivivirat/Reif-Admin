@@ -36,7 +36,7 @@ const EditForm = ({ topic, isOpen, onClose, onEditCard, section, newCardForm, ha
                         />
                     </label>
                     <label className="mb-4">
-                        Back Content:
+                        Back Content: <span className='text-gray-400'>(max 15 words)</span>
                         <input
                             type="text"
                             name="backContent"
