@@ -91,11 +91,38 @@ function TestAdmin() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTestimonial((prevTestimonial) => ({
-      ...prevTestimonial,
-      [name]: value,
-    }));
+  
+    // Define limits for each field
+    const maxLength = {
+      buttonText: 15,
+      pos: 20,
+      kl: 20,
+      poss: 20,
+      description: 500,
+    };
+  
+    // Check if the value exceeds the maximum length
+    if (value.length > maxLength[name]) {
+      // Display a warning pop-up
+      alert(`${name} should not exceed ${maxLength[name]} characters.`);
+      
+      // Truncate the value to the maximum length
+      const truncatedValue = value.slice(0, maxLength[name]);
+  
+      setTestimonial((prevTestimonial) => ({
+        ...prevTestimonial,
+        [name]: truncatedValue,
+      }));
+    } else {
+      // If the value is within the limit, update the state directly
+      setTestimonial((prevTestimonial) => ({
+        ...prevTestimonial,
+        [name]: value,
+      }));
+    }
   };
+  
+  
 
   return (
     <div className="container mx-auto mt-10">
@@ -104,7 +131,8 @@ function TestAdmin() {
         {testimonials.map((test) => (
           <div key={test.uid} className="bg-gray-100 p-4 rounded-lg shadow-md">
             <h3 className="text-lg font-bold mb-2">Edit Testimonial</h3>
-            <h6 className="text-xs mb-2">Do not fill both company with position as well as company without position</h6>
+            <h6 className="text-xs mb-2">Do not fill both company with position as well as company without position, company with position signifies that the position of the individual is mentioned.</h6>
+
             <label className="block mb-2">
               Name:
               <input

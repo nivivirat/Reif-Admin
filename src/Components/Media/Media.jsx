@@ -13,6 +13,7 @@ const AdminPanel = () => {
       heading: '',
       description: '',
       routerlink: '',
+      date:'',
     });
     const [imageFile, setImageFile] = useState(null);
     const [editingUid, setEditingUid] = useState(null);
@@ -63,7 +64,7 @@ const AdminPanel = () => {
     }, []);
   
     const handleAddNew = () => {
-      setFormData({ img: '', heading: '', description: '', routerlink: '' });
+      setFormData({ img: '', heading: '', description: '', routerlink: '', date:'' });
       setShowAddForm(true);
       setShowEditForm(false);
     };
@@ -83,6 +84,7 @@ const AdminPanel = () => {
         heading: '',
         description: '',
         routerlink: '',
+        date:'',
       });
       setImageFile(null);
       setShowAddForm(false);
@@ -110,22 +112,29 @@ const AdminPanel = () => {
   
     const handleFormSubmit = async (e) => {
       e.preventDefault();
-  
+    
       try {
         let imgURL = formData.img;
-  
+    
         if (imageFile) {
           const storageRef = storageFunctions.ref(`images/${imageFile.name}`);
           await storageFunctions.uploadBytes(storageRef, imageFile);
           imgURL = await storageFunctions.getDownloadURL(storageRef);
         }
-  
+    
+        // Check if either heading or description is less than 75 characters
+        if (formData.heading.length < 75 || formData.description.length < 75) {
+          alert('Heading or description should be at least 75 characters.');
+          return; // Prevent form submission
+        }
+    
         if (editingUid) {
           await database.set(`media/${editingUid}`, {
             img: imgURL,
             heading: formData.heading,
             description: formData.description,
             routerlink: formData.routerlink,
+            date: formData.date,
           });
         } else {
           await database.push('media', {
@@ -133,15 +142,17 @@ const AdminPanel = () => {
             heading: formData.heading,
             description: formData.description,
             routerlink: formData.routerlink,
+            date: formData.date,
           });
         }
-  
+    
         console.log('Media updated successfully!');
         setFormData({
           img: '',
           heading: '',
           description: '',
           routerlink: '',
+          date: '',
         });
         setImageFile(null);
         setEditingUid(null);
@@ -151,6 +162,7 @@ const AdminPanel = () => {
         console.error('Error updating media:', error);
       }
     };
+    
   
     const handleAddNew1 = () => {
       setFormData1({ img: '', title: '' });
@@ -258,8 +270,10 @@ const AdminPanel = () => {
   <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
     <div className="mb-4">
       <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
-        Image:
+        Image 
       </label>
+      <br></br>
+      <h6>Please provide same dimension of all images in this section preferrably (500 * 500)</h6>
       <input
         type="file"
         id="image"
@@ -309,6 +323,19 @@ const AdminPanel = () => {
         className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
       />
     </div>
+    <div className="mb-4">
+      <label htmlFor="routerlink" className="block text-gray-700 text-sm font-bold mb-2">
+        Date:
+      </label>
+      <input
+        type="text"
+        id="date"
+        name="date"
+        value={formData.date}
+        onChange={handleInputChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
 
     <div className="flex justify-center">
       <button
@@ -334,7 +361,8 @@ const AdminPanel = () => {
     <div className="mb-4">
       <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
         Image:
-      </label>
+      </label><br></br>
+      <h6>Please provide same dimension of all images in this section preferrably (500 * 500)</h6>
       <input
         type="file"
         id="image"
@@ -384,6 +412,19 @@ const AdminPanel = () => {
         className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
       />
     </div>
+    <div className="mb-4">
+      <label htmlFor="routerlink" className="block text-gray-700 text-sm font-bold mb-2">
+        Date:
+      </label>
+      <input
+        type="text"
+        id="date"
+        name="date"
+        value={formData.date}
+        onChange={handleInputChange}
+        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+      />
+    </div>
 
     <div className="flex justify-center">
       <button
@@ -412,7 +453,7 @@ const AdminPanel = () => {
             <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Heading: {media.heading}</p>
             <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Description: {media.description}</p>
             <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Router Link: {media.routerlink}</p>
-
+            <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Date: {media.date}</p>
             <button style={{ fontSize: '18px', backgroundColor: '#013A98', color: 'white', padding: '5px', borderRadius: '5px', marginRight: '5px' }} onClick={() => handleEdit(media.uid)}>
               Edit
             </button>
@@ -443,7 +484,7 @@ const AdminPanel = () => {
       {showAddForm1 && (
         <form onSubmit={handleFormSubmit1} style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <label>
-            Image:
+            Image  (please provide same dimension of all images in this section preferrably (500 * 500)):
             <input type="file" accept="image/*" onChange={handleImageChange1} />
           </label>
           <label>
@@ -467,7 +508,7 @@ const AdminPanel = () => {
       {showEditForm1 && (
         <form onSubmit={handleFormSubmit1} style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <label>
-            Image:
+            Image (please provide same dimension of all images in this section preferrably (500 * 500)):
             <input type="file" accept="image/*" onChange={handleImageChange1} />
           </label>
           <label>
