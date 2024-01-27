@@ -93,7 +93,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             className="bg-white text-black py-2 px-4 rounded-md border border-gray-300"
                         />
                     </label>
-                    <label className="text-primary flex flex-col">
+                    {/* <label className="text-primary flex flex-col">
                         <span>Upload Archived Image (1 to 3 files):</span>
                         <input
                             type="file"
@@ -103,7 +103,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                             name="archivedImg"
                             multiple  // Enable multiple file selection
                         />
-                    </label>
+                    </label> */}
                     <button className="bg-primary text-base text-white py-2 px-4 rounded-md" type="submit">
                         Submit
                     </button>

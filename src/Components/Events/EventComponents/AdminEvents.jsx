@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { onValue, push, ref, set, update } from 'firebase/database'; // Update imports for v9 syntax
+import { onValue, push, ref, set, update, get } from 'firebase/database'; // Update imports for v9 syntax
 import React, { useEffect, useState } from 'react';
 import { db } from '../../../../firebase';
 import EventForm from './EventForm/EventForm';
@@ -86,40 +86,68 @@ export default function AdminEvents() {
     };
 
     const addNewEvent = (year) => {
-
         setNewEventForm(true);
 
-        // If formData is a string, initialize it as an empty object
-        const newEvent = typeof formData === 'string' ? {} : { ...formData };
+        // Create a temporary form without archivedImg
+        const tempForm = { ...formData };
+        const { archivedImg, ...formWithoutArchivedImg } = tempForm;
 
         const eventsRef = ref(db, 'events/' + year);
-        push(eventsRef, newEvent)
-            .then((newEventRef) => {
-                const newEventId = newEventRef.key;
-                console.log('Event added successfully with UID:', newEventId);
 
-                // Reset formData after adding the event
-                setFormData({ date: '', eventName: '', img: '', location: '', uid: '', desc: '', completed: false, archivedImg: [] });
+        // Fetch the existing number of archived images to calculate the order
+        const existingArchivedImgRef = ref(db, `events/${year}/archivedImg`);
+        get(existingArchivedImgRef)
+            .then((snapshot) => {
+                const existingArchivedImgCount = snapshot.val() ? Object.keys(snapshot.val()).length : 0;
 
-                // Close the new event form after adding the event
-                setNewEventForm(false);
+                // Push the new event without archivedImg
+                push(eventsRef, formWithoutArchivedImg)
+                    .then((newEventRef) => {
+                        const newEventId = newEventRef.key;
+                        console.log('Event added successfully with UID:', newEventId);
 
-                // Update the value of uid field as newEventId in the database
-                const eventRef = ref(db, `events/${year}/${newEventId}`);
-                update(eventRef, { uid: newEventId })
-                    .then(() => {
-                        console.log('UID updated successfully in the database');
+                        // Reset formData after adding the event
+                        setFormData({ date: '', eventName: '', img: '', location: '', uid: '', desc: '', completed: false, archivedImg: [] });
+
+                        // Close the new event form after adding the event
+                        setNewEventForm(false);
+
+                        // Update the value of uid field as newEventId in the database
+                        const eventRef = ref(db, `events/${year}/${newEventId}`);
+                        update(eventRef, { uid: newEventId })
+                            .then(() => {
+                                console.log('UID updated successfully in the database');
+                            })
+                            .catch((error) => {
+                                console.error('Error updating UID in the database:', error);
+                            });
+
+                        // Get the images from the form
+                        const imgsFromForm = formData.archivedImg;
+
+                        // Iterate through the array and store each image with order value
+                        imgsFromForm.forEach((img, index) => {
+                            const orderValue = existingArchivedImgCount + index + 1;
+
+                            // Create a new entry in archivedImg with the UID as key and store img with order value
+                            const archivedImgRef = ref(db, `events/${year}/${newEventId}/archivedImg/${newEventId}-${index}`);
+                            set(archivedImgRef, { img, order: orderValue })
+                                .then(() => {
+                                    console.log(`Archived image ${index + 1} data added successfully`);
+                                })
+                                .catch((error) => {
+                                    console.error(`Error adding archived image ${index + 1} data:`, error);
+                                });
+                        });
                     })
                     .catch((error) => {
-                        console.error('Error updating UID in the database:', error);
+                        console.error('Error adding event: ', error);
                     });
             })
             .catch((error) => {
-                console.error('Error adding event: ', error);
+                console.error('Error fetching existing archived image count:', error);
             });
     };
-
-
 
     const [newYear, setNewYear] = useState("");
 
@@ -281,6 +309,23 @@ export default function AdminEvents() {
 
     const currentYearString = `Events ${currentYear}`;
 
+    const deleteImage = async (year, eventUid) => {
+        try {
+            // Set the "img" field to null in the database
+            const eventImgRef = ref(db, `events/${year}/${eventUid}`);
+            await update(eventImgRef, { img: null });
+
+            // Remove the "img" field from the local state
+            const updatedEventsData = { ...eventsData };
+            delete updatedEventsData[year][eventUid].img;
+            setEventsData(updatedEventsData);
+
+            console.log('Image deleted successfully');
+        } catch (error) {
+            console.error('Error deleting image: ', error);
+        }
+    };
+
     return (
         <div className="p-4 relative">
 
@@ -380,8 +425,16 @@ export default function AdminEvents() {
                                                                 alt={`Event ${index}`}
                                                                 className="w-96 h-108 object-cover rounded-md mt-2"
                                                             />
+                                                            <button
+                                                                onClick={() => deleteImage(year, event.uid, event.img)}
+                                                                title="Delete Event"
+                                                                className="py-2 px-4 rounded-md text-3xl hover:text-red-600"
+                                                            >
+                                                                <Icon icon="mdi:delete" />
+                                                            </button>
                                                         </div>
                                                     )}
+
                                                 </div>
 
                                                 {/* Form to edit event details */}
