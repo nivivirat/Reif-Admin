@@ -115,7 +115,7 @@ const AdminPanel = () => {
   return (
     <div style={{ textAlign: 'center', margin: 'auto', width: '80%', padding: '20px' }}>
       <h2 style={{ fontSize: '32px', color: '#013A98' }}>Admin Panel</h2>
-
+asdfasdfad
       <button
         style={{
           fontSize: '20px',
@@ -181,8 +181,10 @@ const AdminPanel = () => {
 
 
 {showEditForm && (
+  
   <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
     <div className="mb-4">
+      
       <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
         Image:
       </label>
@@ -228,8 +230,6 @@ const AdminPanel = () => {
     </div>
   </form>
 )}
-
-
       <div>
         {mediaData.map((media) => (
           <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>

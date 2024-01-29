@@ -9,20 +9,22 @@ import Newsletter from './Components/Newsletter/Newsletter';
 import Home from './Components/Home/Home';
 import TestAdmin from './Components/Testinomials/Testinomials';
 import Principals from './Components/Principals/Principals';
+import SingleFileUpload from './Components/Media/SingleFileUpload';
 
 function App() {
   return (
     <BrowserRouter>
       <div className="font-poppins w-screen overflow-clip no-vertical-scroll">
-        
+
         <SideBar />
 
         <div className="ml-[50px] mt-[80px]">
           <Routes>
+            <Route path="/media/:id" element={<SingleFileUpload />} />
             <Route path="/Events" element={<Events />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contactUs" element={<ContactUs />} />
-             <Route path="/media" element={<AdminPanel />} />
+            <Route path="/media" element={<AdminPanel />} />
             <Route path="/mediacard" element={<AdminPanel1 />} />
             <Route path="/Newsletter" element={<Newsletter />} />
             <Route path="/" element={<Home />} />
