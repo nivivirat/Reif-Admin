@@ -131,105 +131,110 @@ const AdminPanel = () => {
       </button>
 
       {showAddForm && (
-  <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
-    <div className="mb-4">
-      <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
-        Image:
-      </label>
-      <br></br>
-      <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
-      <input
-        type="file"
-        id="image"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-      />
-    </div>
+        <div className='fixed top-0 left-0 z-40 w-full h-full bg-gray-200 bg-opacity-50 flex justify-center items-center overflow-auto'>
 
-    <div className="mb-4">
-      <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
-        Title:
-      </label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        value={formData.title}
-        onChange={handleInputChange}
-        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-      />
-    </div>
+          <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
+            <div className="mb-4">
+              <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
+                Image:
+              </label>
+              <br></br>
+              <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              />
+            </div>
 
-    <div className="flex justify-center">
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-      >
-        Save New Media Card
-      </button>
-      <button
-        type="button"
-        onClick={handleCancelEdit}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Cancel
-      </button>
-    </div>
-  </form>
-)}
+            <div className="mb-4">
+              <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
+                Title:
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              >
+                Save New Media Card
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
 
-{showEditForm && (
-  
-  <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
-    <div className="mb-4">
-      
-      <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
-        Image:
-      </label>
-      <br></br>
-      <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
-      <input
-        type="file"
-        id="image"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-      />
-    </div>
+      {showEditForm && (
+        <div className='fixed top-0 left-0 z-40 w-full h-full bg-gray-200 bg-opacity-50 flex justify-center items-center overflow-auto'>
 
-    <div className="mb-4">
-      <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
-        Title:
-      </label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        value={formData.title}
-        onChange={handleInputChange}
-        className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
-      />
-    </div>
+          <form onSubmit={handleFormSubmit} className="mt-8 p-8 bg-white rounded-lg shadow-md w-96 mx-auto">
+            <div className="mb-4">
 
-    <div className="flex justify-center">
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
-      >
-        Save Changes
-      </button>
-      <button
-        type="button"
-        onClick={handleCancelEdit}
-        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-      >
-        Cancel Edit
-      </button>
-    </div>
-  </form>
-)}
+              <label htmlFor="image" className="block text-gray-700 text-sm font-bold mb-2">
+                Image:
+              </label>
+              <br></br>
+              <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
+              <input
+                type="file"
+                id="image"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
+                Title:
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelEdit}
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Cancel Edit
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
       <div>
         {mediaData.map((media) => (
           <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
