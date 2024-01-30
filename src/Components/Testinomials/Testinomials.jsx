@@ -1,26 +1,15 @@
-// AdminPanel.jsx
 import React, { useEffect, useState } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue, remove, set, push } from 'firebase/database';
 
-// const firebaseConfig = {
-//   apiKey: "AIzaSyDiNLjf19bW0-5cvkOtdlqYI7YiDzt3WA0",
-//   authDomain: "reifenhauser-2d366.firebaseapp.com",
-//   projectId: "reifenhauser-2d366",
-//   storageBucket: "reifenhauser-2d366.appspot.com",
-//   messagingSenderId: "1000320736803",
-//   appId: "1:1000320736803:web:c9db2603f14597edf45b96",
-//   measurementId: "G-80E388KDKZ",
-// };
-
 const firebaseConfig = {
-  apiKey: "AIzaSyA1h6QXsmX4PcYCZILMTtry8UaaMbcBNKg",
-  authDomain: "agent-807a7.firebaseapp.com",
-  databaseURL: "https://agent-807a7-default-rtdb.firebaseio.com",
-  projectId: "agent-807a7",
-  storageBucket: "agent-807a7.appspot.com",
-  messagingSenderId: "918626263804",
-  appId: "1:918626263804:web:627f47367e84af8e5c2d79"
+  apiKey: "AIzaSyDiNLjf19bW0-5cvkOtdlqYI7YiDzt3WA0",
+  authDomain: "reifenhauser-2d366.firebaseapp.com",
+  projectId: "reifenhauser-2d366",
+  storageBucket: "reifenhauser-2d366.appspot.com",
+  messagingSenderId: "1000320736803",
+  appId: "1:1000320736803:web:c9db2603f14597edf45b96",
+  measurementId: "G-80E388KDKZ",
 };
 
 const initialTestimonialState = {
@@ -72,6 +61,12 @@ function TestAdmin() {
   };
 
   const handleUpdate = () => {
+    // Check if the description is empty before updating
+    if (!testimonial.description.trim()) {
+      alert('Description cannot be empty.');
+      return;
+    }
+
     const firebaseApp = initializeApp(firebaseConfig);
     const database = getDatabase(firebaseApp);
     const testimonialRef = ref(database, `testimonials/${editingId}`);
@@ -81,6 +76,12 @@ function TestAdmin() {
   };
 
   const handleAdd = () => {
+    // Check if the description is empty before adding
+    if (!testimonial.description.trim()) {
+      alert('Description cannot be empty.');
+      return;
+    }
+
     const firebaseApp = initializeApp(firebaseConfig);
     const database = getDatabase(firebaseApp);
     const testimonialsRef = ref(database, 'testimonials');
@@ -91,7 +92,7 @@ function TestAdmin() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-  
+
     // Define limits for each field
     const maxLength = {
       buttonText: 15,
@@ -100,15 +101,15 @@ function TestAdmin() {
       poss: 20,
       description: 500,
     };
-  
+
     // Check if the value exceeds the maximum length
     if (value.length > maxLength[name]) {
       // Display a warning pop-up
       alert(`${name} should not exceed ${maxLength[name]} characters.`);
-      
+
       // Truncate the value to the maximum length
       const truncatedValue = value.slice(0, maxLength[name]);
-  
+
       setTestimonial((prevTestimonial) => ({
         ...prevTestimonial,
         [name]: truncatedValue,
@@ -121,7 +122,6 @@ function TestAdmin() {
       }));
     }
   };
-  
   
 
   return (
