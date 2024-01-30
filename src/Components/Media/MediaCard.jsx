@@ -115,7 +115,7 @@ const AdminPanel = () => {
   return (
     <div style={{ textAlign: 'center', margin: 'auto', width: '80%', padding: '20px' }}>
       <h2 style={{ fontSize: '32px', color: '#013A98' }}>Admin Panel</h2>
-asdfasdfad
+
       <button
         style={{
           fontSize: '20px',

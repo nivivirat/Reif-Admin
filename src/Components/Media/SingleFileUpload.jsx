@@ -74,6 +74,7 @@ const SingleFileUpload = () => {
   const handleUpload = async () => {
     if (!image) {
       console.error('Please select an image');
+      alert("Please select an image");
       return;
     }
 

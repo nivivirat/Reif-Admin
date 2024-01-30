@@ -8,7 +8,7 @@ import AdminPanel1 from './Components/Media/MediaCard'
 import Newsletter from './Components/Newsletter/Newsletter';
 import Home from './Components/Home/Home';
 import TestAdmin from './Components/Testinomials/Testinomials';
-import Principals from './Components/Principals/Principals';
+import Principals from './Components/Principals/Principals';  
 import SingleFileUpload from './Components/Media/SingleFileUpload';
 
 function App() {
