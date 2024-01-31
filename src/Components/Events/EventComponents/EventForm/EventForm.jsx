@@ -75,7 +75,7 @@ const EventForm = ({ event, onSubmit, onChange, onClose, title }) => {
                         />
                     </label>
                     <label className="text-primary flex flex-col">
-                        <span>Upload Image:  <span className='text-[12px] text-black'> (Preferably 250px X 350px)</span></span>
+                        <span>Upload Image:  <span className='text-[12px] text-black'> (Preferably 250px X 250px or 1:1 ratio)</span></span>
                         <input
                             type="file"
                             accept=".jpg, .png, image/jpeg, image/png"
