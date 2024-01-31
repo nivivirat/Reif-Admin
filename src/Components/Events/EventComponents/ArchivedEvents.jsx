@@ -19,6 +19,14 @@ export default function ArchivedEvents() {
     const [currentYearForNewEvent, setCurrentYearForNewEvent] = useState(null);
     const [currentYearForEditEvent, setCurrentYearForEditEvent] = useState(null);
     const [changeOrderSectionVisible, setChangeOrderSectionVisible] = useState(false);
+    const [orderChanges, setOrderChanges] = useState({});
+
+    const handleInputChange = (imgKey, newOrder) => {
+        setOrderChanges((prevChanges) => ({
+            ...prevChanges,
+            [imgKey]: newOrder,
+        }));
+    };
 
     const [newEventForm, setNewEventForm] = useState(false);
 
@@ -326,13 +334,18 @@ export default function ArchivedEvents() {
 
     const [editFormVisible, setEditFormVisible] = useState(false);
 
-    // ...
+    const handleSaveChanges = () => {
+        Object.entries(orderChanges).forEach(([imgKey, newOrder]) => {
+            const imgRef = ref(
+                db,
+                `events/${currentYearForEditEvent}/${selectedEvent.uid}/archivedImg/${imgKey}`
+            );
+            update(imgRef, { order: newOrder });
+        });
 
-    // Function to open the edit form
-    const openEditForm = (eventUid, year) => {
-        setCurrentYearForEditEvent(year);
-        setSelectedEvent(eventsData[year][eventUid]);
-        setEditFormVisible(true);
+        setOrderChanges({});
+        setChangeOrderSectionVisible(false);
+        setSelectedEvent(null);
     };
 
     return (
@@ -558,23 +571,20 @@ export default function ArchivedEvents() {
                             .sort(([, a], [, b]) => a.order - b.order)
                             .map(([imgKey, imgData], imgIndex) => (
                                 <div key={imgKey} className="flex items-center mb-4">
-                                    {/* Image Preview */}
                                     <img
                                         src={imgData.img}
                                         alt={`Archived Image ${imgIndex}`}
                                         className="h-[50px] w-[50px] object-cover rounded-md mr-4"
                                     />
-                                    {/* Order Change Input */}
                                     <div className="flex items-center">
                                         <input
                                             type="number"
                                             className="px-3 py-1 border border-gray-300 rounded-md"
-                                            value={imgData.order}
+                                            value={orderChanges[imgKey] || imgData.order}
                                             onChange={(e) => {
                                                 const newOrder = parseInt(e.target.value, 10);
                                                 if (!isNaN(newOrder)) {
-                                                    const imgRef = ref(db, `events/${currentYearForEditEvent}/${selectedEvent.uid}/archivedImg/${imgKey}`);
-                                                    update(imgRef, { order: newOrder });
+                                                    handleInputChange(imgKey, newOrder);
                                                 }
                                             }}
                                         />
@@ -584,10 +594,7 @@ export default function ArchivedEvents() {
                     </div>
                     <button
                         className="bg-primary text-white py-2 px-4 rounded-md mt-3"
-                        onClick={() => {
-                            setChangeOrderSectionVisible(false)
-                            setSelectedEvent(null);
-                        }}
+                        onClick={handleSaveChanges}
                     >
                         Save Changes
                     </button>
