@@ -447,7 +447,7 @@ const AdminPanel = () => {
 
 
         <div>
-        {mediaData.map((media) => (
+        {mediaData.slice().reverse().map((media) => (
             <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
               <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Media {media.uid}</p>
               <img src={media.img} alt={`Media ${media.uid}`} style={{ maxWidth: '100%', marginBottom: '10px', borderRadius: '5px' }} />
