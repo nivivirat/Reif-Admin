@@ -348,10 +348,73 @@ export default function ArchivedEvents() {
         setSelectedEvent(null);
     };
 
+    const [changeCardsOrder, setChangeCardsOrder] = useState(false);
+    const [currentSection, setCurrentSection] = useState(null);
+
+    // Function to open the change order popup
+    const openChangeOrderPopup = (section) => {
+        setCurrentSection(section);
+        setChangeCardsOrder(true);
+    };
+
     return (
         <div className="p-4 relative">
 
             <div className="flex flex-wrap gap-4">
+
+                {changeCardsOrder ? (
+                    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
+                        <div className="flex justify-between place-items-start mb-4">
+                            <div className="flex flex-col">
+                                <h2 className="text-2xl font-bold mb-2">Change Cards Order in Section: {currentSection}</h2>
+                                <p className="text-sm text-primary">
+                                    (Enter new numeric orders for each card. The cards will be ordered in ascending order based on the entered numbers.)
+                                </p>
+                            </div>
+                            <button
+                                className="text-gray-500 hover:text-gray-700"
+                                onClick={() => setChangeCardsOrder(false)}
+                            >
+                                <Icon icon="ph:x-bold" />
+                            </button>
+                        </div>
+                        <div className='h-[300px] overflow-y-scroll py-5'>
+                            {Object.entries(eventsData[currentSection])
+                                .filter(([key, event]) => key !== 's_order' && event.completed) // Filter events where 'completed' is false
+                                .sort(([, a], [, b]) => a.order - b.order)
+                                .map(([eventId, event]) => (
+                                    <div key={eventId} className="flex items-center mb-4">
+                                        <span className="mr-4 text-gray-600">
+                                            {/* Render the necessary event information */}
+                                            <p className="font-semibold">{event.eventName}:</p>
+                                        </span>
+                                        <div className="flex items-center">
+                                            <input
+                                                type="number"
+                                                className="px-3 py-1 border border-gray-300 rounded-md"
+                                                value={event.order}
+                                                onChange={(e) => {
+                                                    const newOrder = parseInt(e.target.value, 10);
+                                                    if (!isNaN(newOrder)) {
+                                                        const eventRef = ref(db, `events/${currentSection}/${eventId}`);
+                                                        update(eventRef, { order: newOrder });
+                                                    }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                        <button
+                            className="bg-primary text-white py-2 px-4 rounded-md mt-3"
+                            onClick={() => setChangeCardsOrder(false)}
+                        >
+                            Save Changes
+                        </button>
+                    </div>
+                ) : null}
+
+
                 {Object.entries(eventsData).map(([year, events]) => (
                     <div key={year} className="border m-10 rounded-md p-10 w-screen px-24 gap-10">
                         <div className='flex flex-row justify-between py-5'>
@@ -359,14 +422,21 @@ export default function ArchivedEvents() {
                             <h3 className="text-3xl text-primary font-bold mb-2">
                                 {year} ({completeEventCounts[year] || 0} events)
                             </h3>
+                            <button
+                                onClick={() => openChangeOrderPopup(year)}
+                                title="Change Order of Events"
+                                className="bg-primary text-white hover:shadow-lg hover:shadow-green-500/50 py-2 px-4 rounded-md mb-2"
+                            >
+                                Change Order of Events
+                            </button>
                         </div>
-
 
 
 
                         <div>
                             {Object.values(events)
                                 .filter(event => event.completed) // Filter events where 'completed' is false
+                                .sort((a, b) => a.order - b.order) // Sort events based on the 'order' value
                                 .map((event, index) => (
                                     <div key={index} className="bg-gray-100 flex-col border rounded-md p-2 px-10 mb-2 flex">
 
