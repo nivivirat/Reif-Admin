@@ -12,6 +12,7 @@ const AdminPanel = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,6 +21,10 @@ const AdminPanel = () => {
 
         if (mediaData) {
           const dataArray = Object.entries(mediaData).map(([uid, data]) => ({ uid, ...data }));
+
+          // Sort the array based on the date in ascending order
+          dataArray.sort((a, b) => new Date(a.date) - new Date(b.date));
+
           setMediaData(dataArray);
         }
       } catch (error) {
@@ -29,6 +34,7 @@ const AdminPanel = () => {
 
     fetchData();
   }, []);
+  
 
   const handleAddNew = () => {
     setFormData({ img: '', title: '' });
@@ -49,6 +55,7 @@ const AdminPanel = () => {
     setFormData({
       img: '',
       title: '',
+      date:'',
     });
     setImageFile(null);
     setShowAddForm(false);
@@ -102,6 +109,7 @@ const AdminPanel = () => {
       setFormData({
         img: '',
         title: '',
+        date:'',
       });
       setImageFile(null);
       setEditingUid(null);
@@ -139,7 +147,7 @@ const AdminPanel = () => {
                 Image:
               </label>
               <br></br>
-              <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
+              <h6>Please provide same dimension of all images in this section preferably (550 * 550)</h6>
               <input
                 type="file"
                 id="image"
@@ -193,7 +201,7 @@ const AdminPanel = () => {
                 Image:
               </label>
               <br></br>
-              <h6>Please provide same dimension of all images in this section preferrably (550 * 550)</h6>
+              <h6>Please provide same dimension of all images in this section preferably (550 * 550)</h6>
               <input
                 type="file"
                 id="image"
@@ -236,20 +244,21 @@ const AdminPanel = () => {
         </div>
       )}
       <div>
-        {mediaData.map((media) => (
-          <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
-            <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Media Card {media.uid}</p>
-            <img src={media.img} alt={`Media Card ${media.uid}`} style={{ maxWidth: '100%', marginBottom: '10px', borderRadius: '5px' }} />
-            <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Title: {media.title}</p>
+      {mediaData.slice().reverse().map((media) => (
+  <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
+    <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Media Card {media.uid}</p>
+    <img src={media.img} alt={`Media Card ${media.uid}`} style={{ maxWidth: '100%', marginBottom: '10px', borderRadius: '5px' }} />
+    <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Title: {media.title}</p>
 
-            <button style={{ fontSize: '18px', backgroundColor: '#013A98', color: 'white', padding: '5px', borderRadius: '5px', marginRight: '5px' }} onClick={() => handleEdit(media.uid)}>
-              Edit
-            </button>
-            <button style={{ fontSize: '18px', backgroundColor: 'red', color: 'white', padding: '5px', borderRadius: '5px' }} onClick={() => handleDelete(media.uid)}>
-              Delete
-            </button>
-          </div>
-        ))}
+    <button style={{ fontSize: '18px', backgroundColor: '#013A98', color: 'white', padding: '5px', borderRadius: '5px', marginRight: '5px' }} onClick={() => handleEdit(media.uid)}>
+      Edit
+    </button>
+    <button style={{ fontSize: '18px', backgroundColor: 'red', color: 'white', padding: '5px', borderRadius: '5px' }} onClick={() => handleDelete(media.uid)}>
+      Delete
+    </button>
+  </div>
+))}
+
       </div>
     </div>
   );

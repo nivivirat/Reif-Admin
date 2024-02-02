@@ -91,14 +91,7 @@ const AdminPanel = () => {
     setShowEditForm(false);
   };
 
-  const handleDelete = async (uid) => {
-    try {
-      await database.remove(`media/${uid}`);
-      console.log('Media deleted successfully!');
-    } catch (error) {
-      console.error('Error deleting media:', error);
-    }
-  };
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -123,10 +116,7 @@ const AdminPanel = () => {
       }
 
       // Check if either heading or description is less than 75 characters
-      if (formData.heading.length < 75 || formData.description.length < 75) {
-        alert('Heading or description should be at least 75 characters.');
-        return; // Prevent form submission
-      }
+  
 
       if (editingUid) {
         await database.set(`media/${editingUid}`, {
@@ -190,12 +180,18 @@ const AdminPanel = () => {
     setShowEditForm1(false);
   };
 
-  const handleDelete1 = async (uid) => {
+  const handleDelete = async (uid) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this media?');
+    if (!confirmDelete) {
+      return;
+    }
+
     try {
-      await database.remove(`mediacard/${uid}`);
-      console.log('Media card deleted successfully!');
+      await database.remove(`media/${uid}`);
+      alert('Media deleted successfully!');
+      setMediaData((prevData) => prevData.filter((media) => media.uid !== uid));
     } catch (error) {
-      console.error('Error deleting media card:', error);
+      console.error('Error deleting media:', error);
     }
   };
 
@@ -451,7 +447,7 @@ const AdminPanel = () => {
 
 
         <div>
-          {mediaData.map((media) => (
+        {mediaData.slice().reverse().map((media) => (
             <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
               <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Media {media.uid}</p>
               <img src={media.img} alt={`Media ${media.uid}`} style={{ maxWidth: '100%', marginBottom: '10px', borderRadius: '5px' }} />
