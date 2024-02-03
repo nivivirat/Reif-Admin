@@ -14,31 +14,6 @@ const SingleFileUpload = () => {
     setImage(selectedImage);
   };
 
-  function formatText(command, value = null) {
-    switch (command) {
-      case 'fontSize':
-      case 'foreColor':
-        value = prompt(`Enter the ${command === 'fontSize' ? 'font size' : 'text color'}`);
-        break;
-      case 'fontFamily':
-        value = prompt(`Select a font family:\n${fontFamilyOptions.join('\n')}`);
-        break;
-      default:
-        document.execCommand(command, false, value);
-        return;
-    }
-  
-    // Create a span element with the selected style
-    const span = document.createElement('span');
-    span.style[command] = value;
-  
-    // Surround the selected text with the span element
-    const selection = window.getSelection();
-    const range = selection.getRangeAt(0).cloneRange();
-    range.surroundContents(span);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  }
   const fontFamilyOptions = [
     'Arial, sans-serif',
     'Times New Roman, serif',
@@ -51,22 +26,96 @@ const SingleFileUpload = () => {
     'Palatino, serif',
     'Garamond, serif',
     'Times, serif', 
-    'sans-serif',   // Fallback for generic sans-serif
-    'monospace',    // Fallback for generic monospace
-    'cursive',      // Fallback for generic cursive
-    'fantasy',      // Fallback for generic fantasy
+    'sans-serif',   
+    'monospace',    
+    'cursive',      
+    'fantasy',      
   ];
+
+  function formatText(command, value = null) {
+    const hasSelection = document.getSelection().toString() !== '';
+  
+    switch (command) {
+      case 'fontSize':
+        value = prompt(`Enter the font size`);
+        break;
+      case 'foreColor':
+        if (hasSelection) {
+          const colorName = prompt('Enter a color name (e.g., red, blue):');
+          value = getColorHexByName(colorName);
+          if (value) {
+            document.execCommand(command, false, value);
+          } else {
+            alert('Invalid color name.');
+          }
+        } else {
+          alert('Please select text to apply color.');
+        }
+        return;
+      case 'fontFamily':
+        value = prompt(`Select a font family:\n${fontFamilyOptions.join('\n')}`);
+        break;
+      default:
+        document.execCommand(command, false, value);
+        return;
+    }
+  
+    if (hasSelection) {
+      const span = document.createElement('span');
+      span.style[command] = value;
+  
+      const selection = window.getSelection();
+      const range = selection.getRangeAt(0).cloneRange();
+      range.surroundContents(span);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }
+  
+  function getColorHexByName(colorName) {
+    // You can extend this function with additional color names and hex values
+    const colorMap = {
+      red: '#ff0000',
+      blue: '#0000ff',
+      green: '#008000',
+      // Add more color names and hex values as needed
+    };
+  
+    return colorMap[colorName.toLowerCase()] || null;
+  }
+  
   
 
+  function inputColor(defaultColor) {
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.style.display = 'none';
+    document.body.appendChild(input);
+    input.value = defaultColor || '#000000';
+
+    return new Promise((resolve) => {
+      input.addEventListener('input', () => {
+        resolve(input.value);
+        document.body.removeChild(input);
+      });
+
+      input.click();
+    });
+  }
+
   function createLink() {
-    var url = prompt('Enter the URL:');
+    const url = prompt('Enter the URL:');
     if (url) {
       document.execCommand('createLink', false, url);
+      const linkElements = document.querySelectorAll('a');
+      linkElements.forEach((link) => {
+        link.style.color = '#3366cc'; // Set the color to dark blue
+      });
     }
   }
 
   function updateHTMLContent() {
-    var editorContent = document.getElementById('editor').innerHTML;
+    const editorContent = document.getElementById('editor').innerHTML;
     document.getElementById('innercontent').innerHTML = editorContent;
     setHTML(editorContent);
   }
@@ -97,132 +146,129 @@ const SingleFileUpload = () => {
 
   return (
     <div>
-      <>
-        {downloadURL && (
-          <div className="image-preview">
-            <img
-              src={downloadURL}
-              alt="Uploaded"
-              style={{ maxWidth: '100%', margin: '0 auto' }}
-            />
-          </div>
-        )}
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <input
+      {downloadURL && (
+        <div className="image-preview">
+          <img
+            src={downloadURL}
+            alt="Uploaded"
+            style={{ maxWidth: '100%', margin: '0 auto' }}
+          />
+        </div>
+      )}
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <input
+          style={{
+            margin: '0 5px',
+            backgroundColor: '#3498db',
+            color: '#fff',
+            padding: '12px',
+          }}
+          type="file"
+          onChange={handleImageChange}
+        />
+      </div>
+      <div className="editor-container">
+        <div className="toolbar">
+          <button
             style={{
               margin: '0 5px',
               backgroundColor: '#3498db',
               color: '#fff',
-              padding: '12px',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
             }}
-            type="file"
-            onChange={handleImageChange}
-          />
+            onClick={() => formatText('bold')}
+          >
+            Bold
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={() => formatText('italic')}
+          >
+            Italic
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={() => formatText('underline')}
+          >
+            Underline
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={createLink}
+          >
+            Add Link
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={() => formatText('fontSize')}
+          >
+            Font Size
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={() => formatText('foreColor')}
+          >
+            Text Color
+          </button>
+          <button
+            style={{
+              margin: '0 5px',
+              backgroundColor: '#3498db',
+              color: '#fff',
+              padding: '2px',
+              paddingLeft: '10px',
+              paddingRight: '10px',
+            }}
+            onClick={() => formatText('fontFamily')}
+          >
+            Font Family
+          </button>
         </div>
-        <div className="editor-container">
-          <div className="toolbar">
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('bold')}
-            >
-              Bold
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('italic')}
-            >
-              Italic
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('underline')}
-            >
-              Underline
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={createLink}
-            >
-              Add Link
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('fontSize')}
-            >
-              Font Size
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('foreColor')}
-            >
-              Text Color
-            </button>
-            <button
-              style={{
-                margin: '0 5px',
-                backgroundColor: '#3498db',
-                color: '#fff',
-                padding: '2px',
-                paddingLeft: '10px',
-                paddingRight: '10px',
-              }}
-              onClick={() => formatText('fontFamily')}
-            >
-              Font Family
-            </button>
-            {/* Remove the ordered and unordered list buttons */}
-          </div>
-          <div
-            className="editor"
-            contentEditable="true"
-            id="editor"
-            onInput={updateHTMLContent}
-          ></div>
-          <p id="innercontent"></p>
-        </div>
-      </>
+        <div
+          className="editor"
+          contentEditable="true"
+          id="editor"
+          onInput={updateHTMLContent}
+        ></div>
+        <p id="innercontent"></p>
+      </div>
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <button
           style={{
@@ -237,7 +283,7 @@ const SingleFileUpload = () => {
           UPLOAD
         </button>
       </div>
-      <>{innerHTML}</>
+  
     </div>
   );
 };
