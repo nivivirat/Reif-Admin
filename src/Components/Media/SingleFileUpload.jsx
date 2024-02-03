@@ -90,6 +90,8 @@ const SingleFileUpload = () => {
       await database.set(`Media/${id}/innerContent`, data);
       setDownloadURL(downloadURL);
       console.log('Image uploaded successfully');
+
+      alert("Article has been uploaded successfully");
     } catch (error) {
       console.error('Error uploading image:', error);
     }
