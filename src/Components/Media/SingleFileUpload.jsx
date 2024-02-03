@@ -41,7 +41,7 @@ const SingleFileUpload = () => {
         break;
       case 'foreColor':
         if (hasSelection) {
-          const colorName = prompt('Enter a color name (e.g., red, blue):');
+          const colorName = prompt('Enter a color name (red, blue or green):');
           value = getColorHexByName(colorName);
           if (value) {
             document.execCommand(command, false, value);
