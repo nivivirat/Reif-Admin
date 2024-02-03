@@ -388,7 +388,7 @@ const AdminPanel = () => {
 
               <div className="mb-4">
                 <label htmlFor="description" className="block text-gray-700 text-sm font-bold mb-2">
-                  Description (use at least 60 characters):
+                  Description:
                 </label>
                 <textarea
                   id="description"

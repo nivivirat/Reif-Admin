@@ -159,7 +159,7 @@ const AdminPanel = () => {
 
             <div className="mb-4">
               <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
-                Title:
+                Link:
               </label>
               <input
                 type="text"
@@ -213,7 +213,7 @@ const AdminPanel = () => {
 
             <div className="mb-4">
               <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
-                Title:
+                Link:
               </label>
               <input
                 type="text"
@@ -248,7 +248,7 @@ const AdminPanel = () => {
   <div key={media.uid} style={{ border: '1px solid #013A98', padding: '20px', marginBottom: '20px', borderRadius: '10px', textAlign: 'left' }}>
     <p style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>Media Card {media.uid}</p>
     <img src={media.img} alt={`Media Card ${media.uid}`} style={{ maxWidth: '100%', marginBottom: '10px', borderRadius: '5px' }} />
-    <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Title: {media.title}</p>
+    <p style={{ fontSize: '18px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Link: {media.title}</p>
 
     <button style={{ fontSize: '18px', backgroundColor: '#013A98', color: 'white', padding: '5px', borderRadius: '5px', marginRight: '5px' }} onClick={() => handleEdit(media.uid)}>
       Edit
