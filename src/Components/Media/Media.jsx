@@ -506,7 +506,7 @@ const AdminPanel = () => {
                   }}
                 >
                   <a
-                    href={`https://reifenhauser.onrender.com/${generateRoute(media)}`}
+                    href={`https://reifenhauser.onrender.com${generateRoute(media)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
