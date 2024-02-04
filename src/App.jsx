@@ -20,7 +20,7 @@ function App() {
 
         <div className="ml-[50px] mt-[80px]">
           <Routes>
-            <Route path="/media/:id" element={<SingleFileUpload />} />
+              <Route path="/media/:id/:heading" element={<SingleFileUpload />} />
             <Route path="/Events" element={<Events />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/contactUs" element={<ContactUs />} />
