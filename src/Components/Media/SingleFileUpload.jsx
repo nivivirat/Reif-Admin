@@ -41,7 +41,7 @@ const SingleFileUpload = () => {
         break;
       case 'foreColor':
         if (hasSelection) {
-          const colorName = prompt('Enter a color name (red, blue or green):');
+          const colorName = prompt('Enter a color name (red, blue, green, black):');
           value = getColorHexByName(colorName);
           if (value) {
             document.execCommand(command, false, value);
@@ -78,6 +78,7 @@ const SingleFileUpload = () => {
       red: '#ff0000',
       blue: '#0000ff',
       green: '#008000',
+      black: '000000',
       // Add more color names and hex values as needed
     };
   
@@ -126,11 +127,11 @@ const SingleFileUpload = () => {
       alert("Please select an image");
       return;
     }
-
+  
     try {
       const storageRef = storageFunctions.ref(`images/${image.name}`);
       await storageFunctions.uploadBytes(storageRef, image);
-
+  
       const downloadURL = await storageFunctions.getDownloadURL(storageRef);
       const data = {
         Image: downloadURL,
@@ -138,13 +139,15 @@ const SingleFileUpload = () => {
       };
       await database.set(`Media/${id}/innerContent`, data);
       setDownloadURL(downloadURL);
-      console.log('Image uploaded successfully');
-
-      alert("Article has been uploaded successfully");
+      console.log('Uploaded successfully');
+  
+      // Show an alert after successful upload
+      alert('Uploaded successfully');
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading:', error);
     }
   };
+  
 
   return (
     <div>
@@ -249,19 +252,7 @@ const SingleFileUpload = () => {
           >
             Text Color
           </button>
-          {/* <button
-            style={{
-              margin: '0 5px',
-              backgroundColor: '#3498db',
-              color: '#fff',
-              padding: '2px',
-              paddingLeft: '10px',
-              paddingRight: '10px',
-            }}
-            onClick={() => formatText('fontFamily')}
-          >
-            Font Family
-          </button> */}
+  
         </div>
         <div
           className="editor"

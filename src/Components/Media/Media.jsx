@@ -105,19 +105,24 @@ const AdminPanel = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      // Check if heading is empty or contains only whitespace
+      if (!formData.heading.trim()) {
+        alert('Please enter a heading.'); // You can replace this with a more user-friendly UI feedback
+        return;
+      }
+  
       let imgURL = formData.img;
-
+  
       if (imageFile) {
         const storageRef = storageFunctions.ref(`images/${imageFile.name}`);
         await storageFunctions.uploadBytes(storageRef, imageFile);
         imgURL = await storageFunctions.getDownloadURL(storageRef);
       }
-
-      // Check if either heading or description is less than 75 characters
   
-
+      // ... existing code ...
+  
       if (editingUid) {
         await database.set(`media/${editingUid}`, {
           img: imgURL,
@@ -135,7 +140,7 @@ const AdminPanel = () => {
           date: formData.date,
         });
       }
-
+  
       console.log('Media updated successfully!');
       setFormData({
         img: '',
@@ -152,6 +157,7 @@ const AdminPanel = () => {
       console.error('Error updating media:', error);
     }
   };
+  
 
 
   const handleAddNew1 = () => {
@@ -194,7 +200,19 @@ const AdminPanel = () => {
       console.error('Error deleting media:', error);
     }
   };
-
+  const generateRoute = (media) => {
+    if (media && media.uid) {
+      const sanitizedHeading = media.heading.replace(/\s+/g, '-');
+      return `/media/${media.uid}/${sanitizedHeading}`;
+    } else {
+      // Handle the case where uid is undefined
+      console.error('Invalid media object:', media);
+      return '/error'; // or any other fallback route
+    }
+  };
+  
+  
+  
   const handleImageChange1 = (e) => {
     const file = e.target.files[0];
     setImageFile1(file);
@@ -472,7 +490,8 @@ const AdminPanel = () => {
                     borderRadius: '5px',
                   }}
                 >
-                  <Link to={`/media/${media.uid}`}>Go to Your Route</Link>
+                <Link to={generateRoute(media)}>Go to Your Route</Link>
+
 
                 </button>
               </div>
@@ -487,7 +506,7 @@ const AdminPanel = () => {
                   }}
                 >
                   <a
-                    href={`https://reifenhauser.onrender.com/media/${media.uid}`}
+                    href={`https://reifenhauser.onrender.com${generateRoute(media)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
