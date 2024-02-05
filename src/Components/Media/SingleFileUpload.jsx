@@ -249,7 +249,7 @@ const SingleFileUpload = () => {
           >
             Text Color
           </button>
-          <button
+          {/* <button
             style={{
               margin: '0 5px',
               backgroundColor: '#3498db',
@@ -261,7 +261,7 @@ const SingleFileUpload = () => {
             onClick={() => formatText('fontFamily')}
           >
             Font Family
-          </button>
+          </button> */}
         </div>
         <div
           className="editor"
