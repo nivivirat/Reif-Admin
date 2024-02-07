@@ -111,7 +111,7 @@ export default function Newsletter() {
                 </thead>
                 <tbody className="bg-white divide-gray-200">
                     {/* Table rows */}
-                    {currentItems.map((nl, index) => (
+                    {currentItems.slice().reverse().map((nl, index) => (
                         <tr key={index} className="hover:bg-gray-50">
                             <td className="border border-black px-6 py-4">{indexOfFirstItem + index + 1}</td>
                             <td className="border border-black px-6 py-4 cursor-pointer" onClick={() => copyToClipboard(nl.email)}>{nl.email}</td>
