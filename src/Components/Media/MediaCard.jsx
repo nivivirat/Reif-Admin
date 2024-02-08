@@ -65,7 +65,7 @@ const AdminPanel = () => {
   const handleDelete = async (uid) => {
     try {
       await database.remove(`mediacard/${uid}`);
-      console.log('Media card deleted successfully!');
+      alert('Media card deleted successfully! Please Refresh the page');
     } catch (error) {
       console.error('Error deleting media card:', error);
     }
@@ -105,7 +105,7 @@ const AdminPanel = () => {
         });
       }
 
-      console.log('Media card updated successfully!');
+      alert('Media card updated successfully! Please Refresh the page');
       setFormData({
         img: '',
         title: '',
