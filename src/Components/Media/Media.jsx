@@ -7,6 +7,7 @@ const AdminPanel = () => {
   const [mediaData, setMediaData] = useState([]);
   const [mediaData1, setMediaData1] = useState([]);
   const navigate = useNavigate();
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [formData, setFormData] = useState({
     img: '',
@@ -141,7 +142,7 @@ const AdminPanel = () => {
         });
       }
   
-      console.log('Media updated successfully!');
+      alert('Media updated successfully! Please Refresh the page');
       setFormData({
         img: '',
         heading: '',
@@ -194,7 +195,7 @@ const AdminPanel = () => {
 
     try {
       await database.remove(`media/${uid}`);
-      alert('Media deleted successfully!');
+      alert('Media deleted successfully! Please Refresh the page');
       setMediaData((prevData) => prevData.filter((media) => media.uid !== uid));
     } catch (error) {
       console.error('Error deleting media:', error);
@@ -247,7 +248,7 @@ const AdminPanel = () => {
         });
       }
 
-      console.log('Media card updated successfully!');
+      alert('Media card updated successfully! Please Refresh the page');
       setFormData1({
         img: '',
         title: '',
