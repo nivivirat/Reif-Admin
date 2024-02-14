@@ -8,9 +8,6 @@ const NewCardForm = ({ topic, isOpen, onClose, onAddCard, section, newCardForm, 
             <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-md shadow-md">
                 <div className='flex flex-col mb-4'>
                     <h3 className="text-xl font-bold">Add New Card  - {section}</h3>
-                    <p className="text-sm text-primary">
-                        (image dimension around 150px h & 250px w)
-                    </p>
                 </div>
                 <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <button
@@ -32,13 +29,19 @@ const NewCardForm = ({ topic, isOpen, onClose, onAddCard, section, newCardForm, 
                     </label>
                     <label className="mb-4">
                         Image File:
+                        <span className="ml-1 text-[12px] text-primary">
+                            (recommended : 100px h x 130w)
+                        </span>
                         <input
                             type="file"
                             accept="image/*"
                             name="img"
                             onChange={handleFileChange}
                             className="border p-2 rounded-md w-full"
-                        />  
+                        />
+                        <span className="text-sm text-primary">
+                            (image dimension must be 1:2 (h:w) ratio recommended for best resolution)
+                        </span>
                     </label>
                     <label className="mb-4">
                         Back Content: <span className='text-gray-400'>(max 15 words)</span>
