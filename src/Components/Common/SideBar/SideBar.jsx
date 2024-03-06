@@ -53,6 +53,7 @@ export default function SideBar() {
                                     <Nav title={"Principals"} destination={"Principals"} />
                                     <Nav title={"Media"} destination={"Media"} />
                                     <Nav title={"Careers"} destination={"Careers"} />
+                                    <Nav title={"Careers Image"} destination={"CareersImage"} />
                                     <Nav title={"Contact us"} destination={"ContactUs"} />
                                     <Nav title={"Newsletter Subscription"} destination={"Newsletter"} />
                                 </ul>

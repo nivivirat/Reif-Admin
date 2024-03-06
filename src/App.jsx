@@ -10,6 +10,7 @@ import Home from './Components/Home/Home';
 import TestAdmin from './Components/Testinomials/Testinomials';
 import Principals from './Components/Principals/Principals';  
 import SingleFileUpload from './Components/Media/SingleFileUpload';
+import CareersImage from './Components/CareersImage/CareersImage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
               <Route path="/media/:id/:heading" element={<SingleFileUpload />} />
             <Route path="/Events" element={<Events />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/CareersImage" element={<CareersImage />} />
             <Route path="/contactUs" element={<ContactUs />} />
             <Route path="/media" element={<AdminPanel />} />
             <Route path="/mediacard" element={<AdminPanel1 />} />
