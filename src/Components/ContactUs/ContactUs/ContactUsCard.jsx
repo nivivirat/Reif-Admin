@@ -83,7 +83,7 @@ const ContactUsCard = ({ contactData }) => {
         .padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
     return (
-        <div className='max-w-full mr-10 mt-10'>
+        <div className='max-w-full mr-[140px] mt-10'>
 
             <div className="mb-4 flex justify-between items-center">
                 <div>
