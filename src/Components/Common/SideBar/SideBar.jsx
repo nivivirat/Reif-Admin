@@ -114,26 +114,26 @@ export default function SideBar() {
                                 {user && (
                                     <div className="mt-5 flex flex-row justify-between">
                                         <button
-                                            className=""
+                                            className="hover:text-primary text-white"
                                             onClick={handleForgotPassword}
                                         >
                                             <div
-                                                className="text-white w-[130px] flex flex-row justify-center place-items-center py-2 gap-1 rounded-lg text-center transition duration-300 ease-in-out hover:bg-gray-200 hover:shadow-md hover:text-black bg-primary"
+                                                className="w-[130px] flex flex-row justify-center place-items-center py-2 gap-1 rounded-lg text-center transition duration-300 ease-in-out hover:bg-gray-200 hover:shadow-md hover:text-black bg-primary"
                                             >
                                                 <Icon
                                                     icon="mdi:password-reset"
-                                                    className="text-white text-2xl"
+                                                    className=" hover:text-primary text-2xl"
                                                 />
                                                 Reset pass
                                             </div>
                                         </button>
                                         <button
-                                            className=""
+                                            className="hover:text-primary text-white"
                                             onClick={handleLogOut}
                                         >
                                             <div
-                                                className="text-white w-[130px] flex flex-row justify-center place-items-center gap-2 py-2 px-4 rounded-lg text-center transition duration-300 ease-in-out hover:bg-gray-200 hover:shadow-md hover:text-black bg-primary">
-                                                <Icon icon="material-symbols:logout" className="text-white text-2xl" />
+                                                className="w-[130px] flex flex-row justify-center place-items-center gap-2 py-2 px-4 rounded-lg text-center transition duration-300 ease-in-out hover:bg-gray-200 hover:shadow-md hover:text-black bg-primary">
+                                                <Icon icon="material-symbols:logout" className="hover:text-primary text-2xl" />
                                                 logout
                                             </div>
                                         </button>

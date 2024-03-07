@@ -67,7 +67,7 @@ export default function Login() {
                                                 handleLogin(); // Call your login function
                                             }}>
                                                 <div>
-                                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-primary">Your email</label>
+                                                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-primary">Email</label>
                                                     <input
                                                         type="email"
                                                         name="email"
