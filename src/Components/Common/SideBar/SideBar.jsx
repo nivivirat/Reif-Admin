@@ -100,7 +100,7 @@ export default function SideBar() {
                             </div>
 
                             <div>
-                                <ul className="flex flex-col gap-4 mt-5">
+                                <ul className="flex flex-col gap-2 mt-5">
                                     <Nav title={"Home Banner"} destination={""} />
                                     <Nav title={"Events"} destination={"Events"} />
                                     <Nav title={"Testimonials"} destination={"Testimonials"} />
@@ -110,6 +110,7 @@ export default function SideBar() {
                                     <Nav title={"Careers Image"} destination={"CareersImage"} />
                                     <Nav title={"Contact us"} destination={"ContactUs"} />
                                     <Nav title={"Newsletter Subscription"} destination={"Newsletter"} />
+                                    <Nav title={"Youtube Video"} destination={"YoutubeVideo"} />
                                 </ul>
                                 {user && (
                                     <div className="mt-5 flex flex-row justify-between">

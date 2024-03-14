@@ -14,6 +14,7 @@ import CareersImage from './Components/CareersImage/CareersImage';
 import Login from './Components/Login/Login';
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase';
+import YouTubeVideo from './Components/YouTubeVideo/YouTubeVideo';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -61,6 +62,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/testimonials" element={<TestAdmin />} />
               <Route path="/principals" element={<Principals />} />
+              <Route path="/YoutubeVideo" element={<YouTubeVideo />} />
             </>
           )}
         </Routes>
