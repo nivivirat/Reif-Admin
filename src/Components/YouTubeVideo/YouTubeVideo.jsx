@@ -8,6 +8,7 @@ export default function YouTubeVideo() {
     const [newLink, setNewLink] = useState('');
     const [newOrder, setNewOrder] = useState('');
     const [editedLink, setEditedLink] = useState('');
+    const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
     useEffect(() => {
         // Initialize Firebase database
@@ -48,7 +49,7 @@ export default function YouTubeVideo() {
     };
 
     const addNewLink = () => {
-        if (newLink && newOrder) {
+        if (newLink && newOrder && window.confirm("Are you sure you want to add this link?")) {
             const db = getDatabase();
             const ytLinksRef = ref(db, 'ytlinks');
             const newLinkData = {
@@ -61,39 +62,47 @@ export default function YouTubeVideo() {
         }
     };
 
-    const editLink = (linkId, newLinkValue) => {
-        const db = getDatabase();
-        const ytLinksRef = ref(db, 'ytlinks');
-        update(ytLinksRef, {
-            [`${linkId}/link`]: newLinkValue
-        });
+    const editLink = (linkId) => {
+        const newLinkValue = prompt("Enter the new link:");
+        if (newLinkValue !== null) {
+            if (window.confirm("Are you sure you want to edit this link?")) {
+                const db = getDatabase();
+                const ytLinksRef = ref(db, 'ytlinks');
+                update(ytLinksRef, {
+                    [`${linkId}/link`]: newLinkValue
+                });
+            }
+        }
     };
 
-
     const editLinkOrder = (linkId, newOrderValue) => {
-        const db = getDatabase();
-        const ytLinksRef = ref(db, 'ytlinks');
-        update(ytLinksRef, {
-            [`${linkId}/order`]: parseInt(newOrderValue) // Update only the order property
-        });
+        if (window.confirm("Are you sure you want to edit the order of this link?")) {
+            const db = getDatabase();
+            const ytLinksRef = ref(db, 'ytlinks');
+            update(ytLinksRef, {
+                [`${linkId}/order`]: parseInt(newOrderValue) // Update only the order property
+            });
+        }
     };
 
     const deleteLink = (linkId) => {
-        try {
-            const db = getDatabase();
-            const ytLinksRef = ref(db, 'ytlinks');
-            const linkToDeleteRef = child(ytLinksRef, linkId);
-            remove(linkToDeleteRef)
-                .then(() => {
-                    // Successfully deleted the link
-                    console.log(`Link with ID ${linkId} deleted successfully.`);
-                })
-                .catch((error) => {
-                    // Failed to delete the link
-                    console.error(`Error deleting link with ID ${linkId}: ${error.message}`);
-                });
-        } catch (error) {
-            console.error('Error occurred while attempting to delete link:', error);
+        if (window.confirm("Are you sure you want to delete this link?")) {
+            try {
+                const db = getDatabase();
+                const ytLinksRef = ref(db, 'ytlinks');
+                const linkToDeleteRef = child(ytLinksRef, linkId);
+                remove(linkToDeleteRef)
+                    .then(() => {
+                        // Successfully deleted the link
+                        console.log(`Link with ID ${linkId} deleted successfully.`);
+                    })
+                    .catch((error) => {
+                        // Failed to delete the link
+                        console.error(`Error deleting link with ID ${linkId}: ${error.message}`);
+                    });
+            } catch (error) {
+                console.error('Error occurred while attempting to delete link:', error);
+            }
         }
     };
 
@@ -108,11 +117,12 @@ export default function YouTubeVideo() {
                         <iframe
                             width="700"
                             height="415"
-                            src={`https://www.youtube.com/embed/${extractVideoId(videos[currentIndex].link)}`}
+                            src={`https://www.youtube.com/embed/${extractVideoId(videos[currentIndex].link)}?controls=0`}
                             title="YouTube video player"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
+                            className='md:w-[700px] md:h-[415px] w-full h-full'
                         ></iframe>
                         <button className='text-primary px-4 py-2 rounded-r' onClick={goToNextVideo}>
                             <Icon icon="grommet-icons:form-next" />
@@ -160,18 +170,11 @@ export default function YouTubeVideo() {
                                         />
                                     </td>
                                     <td className="border-b border-gray-300 py-2 px-4">
-                                        <input
-                                            type="text"
-                                            placeholder="New link"
-                                            value={editedLink}
-                                            onChange={(e) => setEditedLink(e.target.value)}
-                                            className="border border-gray-300 rounded-md py-1 px-2"
-                                        />
-                                    </td>
-                                    <td className="border-b border-gray-300 py-2 px-4">
-                                        <button className="text-primary mr-2" onClick={() => editLink(video.id, editedLink)}>
+                                        <button className="text-primary mr-2" onClick={() => editLink(video.id)}>
                                             Edit Link
                                         </button>
+                                    </td>
+                                    <td className="border-b border-gray-300 py-2 px-4">
                                         <button className="text-primary" onClick={() => deleteLink(video.id)}>
                                             Delete
                                         </button>
